@@ -1,17 +1,8 @@
 """D1: MRR rebuilt from invoice line items must equal the simulation's true subscription-state MRR.
 
-The coverage tests run now and prove the data contains every case the rebuild must handle.
-The equality test runs once sql/10_mrr.sql exists (Day 3). That file must create
-mrr_month_end(month VARCHAR, customer VARCHAR, arr_cents BIGINT), where arr_cents = MRR x 12.
+The coverage tests prove the data contains every case the rebuild must handle; the equality
+tests compare sql/10_mrr.sql's mrr_month_end (arr_cents = MRR x 12) with truth.mrr_month_end.
 """
-from pathlib import Path
-
-import pytest
-
-from tests.conftest import ROOT
-
-MRR_SQL = ROOT / "sql" / "10_mrr.sql"
-
 # Month-ends as epoch seconds, from the truth table.
 MONTH_ENDS = "(SELECT DISTINCT month_end AS e FROM truth.mrr_month_end)"
 
@@ -84,10 +75,8 @@ def test_covers_dunning_and_trials_at_month_end(con):
     assert n >= 10
 
 
-@pytest.mark.skipif(not MRR_SQL.exists(), reason="sql/10_mrr.sql lands on Day 3")
-def test_rebuilt_mrr_equals_truth_for_every_customer_and_month(con):
-    con.execute(MRR_SQL.read_text())
-    diff = con.execute("""
+def test_rebuilt_mrr_equals_truth_for_every_customer_and_month(marts):
+    diff = marts.execute("""
         WITH truth AS (SELECT month, customer, sum(arr_cents) AS arr FROM truth.mrr_month_end
                        GROUP BY ALL HAVING sum(arr_cents) > 0),
              rebuilt AS (SELECT month, customer, sum(arr_cents) AS arr FROM mrr_month_end
@@ -96,3 +85,18 @@ def test_rebuilt_mrr_equals_truth_for_every_customer_and_month(con):
         FROM truth t FULL JOIN rebuilt r USING (month, customer)
         WHERE t.arr IS DISTINCT FROM r.arr ORDER BY 1, 2 LIMIT 20""").fetchall()
     assert diff == []
+
+
+def test_rebuilt_dunning_flag_equals_truth(marts):
+    diff = marts.execute("""
+        WITH truth AS (SELECT month, customer, bool_or(past_due) AS pd FROM truth.mrr_month_end
+                       GROUP BY ALL HAVING sum(arr_cents) > 0)
+        SELECT month, customer FROM truth t JOIN customer_mrr r USING (month, customer)
+        WHERE t.pd IS DISTINCT FROM r.past_due""").fetchall()
+    assert diff == []
+
+
+def test_rebuild_compares_every_month_end(marts):
+    # Guard against a vacuous pass: both sides cover all 30 month-ends and thousands of rows.
+    months, rows = marts.execute("SELECT count(DISTINCT month), count(*) FROM customer_mrr").fetchone()
+    assert months == 30 and rows > 5000

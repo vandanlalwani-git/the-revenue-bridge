@@ -114,7 +114,7 @@ Revenue recognition, changed from v1:
 
 ## 5. AI step: notes for all 18 months
 
-1. **Facts.** `build_facts.py` writes `notes/facts/YYYY-MM.json` for every reporting month. Each figure gets an ID ([F1], [F2] …): bridge components, drivers, churn by plan, type and cohort, NRR and GRR, at-risk MRR, the reconciliation items, the **top 5 movers** and the **delta against the trailing 3-month average** for each headline metric. Facts carry no event labels, only metrics.
+1. **Facts.** `build_facts.py` writes `notes/facts/YYYY-MM.json` for every reporting month. Each figure gets an ID ([F1], [F2] …): bridge components, drivers, churn by plan, type and cohort, NRR and GRR, at-risk MRR, the reconciliation items, the **top 5 movers** and the **delta against the trailing 3-month average** for each headline metric. Refunds are **split into delivered (earned, reduces revenue) and unearned (reduces the contract liability)**, and the **largest single refund** is listed with its amount, portion and customer ID, so the note can attribute refunds correctly. Facts carry no event labels, only metrics.
 2. **Prompt** (`notes/prompt.md`):
    - 120–200 words in a founder's voice.
    - Every number cites a fact ID.
@@ -138,7 +138,7 @@ Revenue recognition, changed from v1:
    - **Detection, metrics layer:** each expected signal, checked by threshold in SQL.
    - **Detection, narrative layer:** does the note for that month mention the signal? This is checked with keyword and fact-ID rules, and a manual review is recorded.
    - **Quiet months, including E8 and all unplanted months:** anomaly language ("spike", "surge", "sharp", "concentrated", "unusual"…) has to cite a fact whose trailing-average delta crosses the threshold. Otherwise it counts as an unsupported claim.
-6. **Write-up disclosure (required):** the facts file **pre-computes the top movers and the trailing-average deltas**. The AI's job is to select, rank and narrate figures already computed. It doesn't discover anomalies from raw data.
+6. **Write-up disclosures (required, drafted in `docs/writeup.md`):** the answer key was finalised after data generation and before any note was written, with each adjustment listed; the prompt was frozen before evaluation. Also: the facts file **pre-computes the top movers and the trailing-average deltas**. The AI's job is to select, rank and narrate figures already computed. It doesn't discover anomalies from raw data.
 
 ---
 
@@ -155,14 +155,15 @@ the-revenue-bridge/
 ├─ data/raw/               # generated (reproducible from seed)
 ├─ stripe_check/           # Day 8, first to cut
 ├─ sql/
-│  ├─ 00_staging.sql
-│  ├─ 10_mrr_daily.sql     # MRR per customer per day (month-ends + averages)
-│  ├─ 20_mrr_movements.sql # new/expansion/contraction/churn/reactivation + drivers
+│  ├─ 00_staging.sql       # typed lines, calendar, dunning spells, round_half_up macro
+│  ├─ 10_mrr.sql           # month-end MRR (as ARR cents) rebuilt from invoice lines, at-risk flag
+│  ├─ 20_mrr_movements.sql # movements, drivers, the bridge (+ blind-spot count)
 │  ├─ 30_retention.sql     # logo churn, MRR churn, NRR, GRR, cohorts
 │  ├─ 40_revenue.sql       # daily ratable recognition, delivered days only
 │  ├─ 50_ledger.sql        # deferred revenue + AR rollforwards, ECL, write-offs
 │  └─ 60_reconciliation.sql
-├─ pipeline/run.py
+├─ pipeline/run.py        # builds sql/*.sql, exports data/marts/*.parquet
+├─ pipeline/display.py    # the only display-rounding code (definitions §7)
 ├─ notes/  prompt.md, FREEZE.json, build_facts.py, write_notes.py, evaluate.py, facts/, output/
 ├─ site/   build_site.py, template.html, index.html
 ├─ .github/workflows/pages.yml   # deploys site/ only
@@ -180,9 +181,9 @@ the-revenue-bridge/
 |-----|------|-----------|
 | 1 | Metric definitions, scenario, repo scaffold, generator skeleton (monthly plans, renewals, voluntary churn) | **✅ Gate 1 signed off 2026-10-29** |
 | 2 | Generator messiness: annual, trials, coupons, proration, seats, refunds, dunning. Plant E1–E8 and write the answer key. Export true subscription-state ARR for `test_mrr_rebuild` | ✅ Done 2026-10-29: 25 tests pass, 2 wait for SQL |
-| 3 | Staging, daily/month-end MRR, movements and drivers | **⛔ Gate 2: bridge ties every month (pytest), Vandan signs off** |
+| 3 | Staging, month-end MRR, movements and drivers, display rounding | **⛔ Gate 2 (awaiting sign-off): bridge ties all 30 months; rebuild = truth for all 7,257 customer-months** |
 | 4 | Retention (logo churn, MRR churn, NRR, GRR, cohorts), revenue recognition | Revenue per line sums to line amount. The E5 test also checks that 2026-03 cash far exceeds revenue, deferred revenue rises, and MRR falls (monthly → annual contraction) |
-| 5 | Ledger (deferred, AR, ECL, write-offs), cash, three reconciliations | **⛔ Gate 3: all reconciliations show $0.00 unexplained (pytest), Vandan signs off** |
+| 5 | Daily MRR snapshots for average MRR (R1), ledger (deferred, AR, ECL, write-offs), cash, three reconciliations | **⛔ Gate 3: all reconciliations show $0.00 unexplained (pytest), Vandan signs off** |
 | 6 | Facts builder. Prompt written, format-linted on the dev seed, frozen. 18 notes via `claude -p`. Then the evaluator | Scorecard produced |
 | 7 | Static site | Page renders locally |
 | 8 | Stripe test-clock check, GitHub Actions Pages workflow, polish | Same SQL runs on the Stripe export |

@@ -41,3 +41,11 @@ def con(dataset):
             db.execute(f"CREATE VIEW {schema}.{table} AS SELECT * FROM '{dataset / schema / table}.parquet'")
     yield db
     db.close()
+
+
+@pytest.fixture(scope="session")
+def marts(con):
+    """The same connection with every sql/*.sql file built on top of raw.*."""
+    from pipeline.run import build
+    build(con)
+    return con

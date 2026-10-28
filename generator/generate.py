@@ -738,7 +738,8 @@ class Simulation:
                 {"id": "E1", "title": "Starter price rise $29 -> $35 at each renewal from 2025-09-01",
                  "details": {"effective": str(ev["E1_price_rise"]["effective"])},
                  "signals": [
-                     {"month": "2025-09", "signal": "expansion, driver price_change, concentrated in Starter"},
+                     {"month": "2025-09", "signal": "expansion with driver price_change, concentrated in Starter, and a jump in "
+                                                   "customers expanding; total expansion dollars are not elevated"},
                      {"month": "2025-09", "signal": "Starter voluntary churn above trailing 3-month average"},
                      {"month": "2025-10", "signal": "Starter voluntary churn above trailing 3-month average"}]},
                 {"id": "E2", "title": "Largest Scale customer churns", "details": self.key["E2_largest_churn"],
