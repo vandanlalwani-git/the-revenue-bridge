@@ -1,0 +1,14 @@
+# The only place the note-writer CLI and model are pinned.
+# write_notes.py checks `<cli_path> --version` against expected_cli_version and stops on a mismatch.
+# The desktop app updates its bundled CLI, so a version change is a deliberate edit here, not a silent drift.
+cli_path: "~/Library/Application Support/Claude/claude-code/2.1.308/a93ded4b1b47/claude.app/Contents/MacOS/claude"
+expected_cli_version: "2.1.308"
+model: claude-opus-5-5
+flags:            # isolation: no tools, no MCP servers, no saved session
+  - --print
+  - --tools
+  - ""
+  - --strict-mcp-config
+  - --no-session-persistence
+  - --output-format
+  - json

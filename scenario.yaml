@@ -1,0 +1,54 @@
+# The Revenue Bridge: simulation scenario.
+# Money is in integer cents (USD), as Stripe stores it.
+# Sections marked "day 2" are read by the generator from Day 2 onward.
+
+seed: 20260129        # test scenario: the answer key applies to this seed
+dev_seed: 7           # used only to format-lint the note prompt before it is frozen
+
+simulation:
+  start: 2024-01-01   # company launch; 2024 is burn-in so 12-month NRR exists from 2025-01
+  end: 2026-06-30
+reporting:
+  start: 2025-01
+  end: 2026-06
+
+acquisition:
+  signups_first_month: 16     # Poisson mean in 2024-01
+  monthly_growth: 0.04        # mean grows 4% a month
+
+plans:
+  starter:
+    name: Starter
+    mix: 0.55                 # share of new signups
+    monthly_price: 2900
+    annual_price: 29000       # 10x monthly
+    monthly_churn: 0.045      # chance a customer requests cancellation in any given period
+  growth:
+    name: Growth
+    mix: 0.33
+    monthly_price: 9900
+    annual_price: 99000
+    monthly_churn: 0.025
+  scale:
+    name: Scale
+    mix: 0.12
+    monthly_price: 39900      # base, includes 10 seats
+    annual_price: 399000
+    monthly_churn: 0.012
+    seats:
+      included: 10
+      monthly_price: 3000     # per extra seat
+      annual_price: 30000
+      extra_seats_mean: 8     # geometric draw at signup; 0 means no seat item
+
+# ---- day 2 -------------------------------------------------------------
+annual_share: 0.20            # share of new signups choosing annual billing
+trial:
+  days: 14
+  share: 0.60                 # share of signups starting with a trial
+  conversion: 0.70
+dunning:
+  retry_days: [3, 7, 14]      # attempt on day 0, retries on these days; day-14 failure => cancel
+  base_failure_rate: 0.04     # chance a renewal charge fails on day 0
+  recovery_per_retry: 0.35
+planted_events: {}            # E1-E8, filled in on Day 2; also written to data/answer_key.json
