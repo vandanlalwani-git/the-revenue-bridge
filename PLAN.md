@@ -89,9 +89,9 @@ scenario.yaml ──► generator/generate.py ──► data/raw/*.parquet (Stri
 | E1 | Monthly Starter price rises from $29 to $35, effective at each subscription's first renewal from 2025-09-01. Annual Starter plans move at their renewal. | **2025-09:** expansion with driver *price change*, concentrated in Starter. **2025-09 and 2025-10:** Starter voluntary churn above its trailing 3-month average. |
 | E2 | Largest Scale customer (monthly, about 60 seats) cancels, ending in 2025-11 | **2025-11:** one logo makes up more than 50% of churned MRR, and gross MRR churn % far exceeds logo churn %. |
 | E3 | Most of the 2026-01 cohort signs up on a promo: no trial, 50% off for 3 months (repeating coupon) | **2026-04:** expansion with driver *discount ended*, attributable to the 2026-01 cohort. Voluntary churn concentrated in that cohort. Logo-retention cliff at M3 for the 2026-01 cohort. |
-| E4 | A batch of cards expires at the end of 2026-01, so those customers' 2026-02 renewals fail | **2026-02:** failed-charge count spikes. Involuntary churn rises, from failures on renewal days 1–14 that don't recover. At-risk MRR at 2026-02 month-end is elevated, from failures on days 15–28 still in dunning. Bad-debt expense rises. **2026-03:** involuntary churn rises again, as the day 15–28 failures spill over. At-risk MRR at 2026-03 month-end is back to baseline. |
+| E4 | A batch of cards expires at the end of 2026-01, so those customers' 2026-02 renewals fail | **Primary (counts):** 2026-02: customers entering dunning spike, involuntary churn count up (failures on renewal days 1–14), and customers still in dunning at month-end elevated (days 15–28). 2026-03: involuntary churn count up again as the spill-over clears. **Supporting:** at-risk MRR at 2026-02 month-end elevated and back to baseline at 2026-03 month-end; bad-debt expense up. At-risk MRR is not primary evidence, because an organic cluster of 3 Scale customers in dunning moves it as much at 2026-04 month-end ($2,074 against $2,025). |
 | E5 | Annual-prepay push: monthly customers switch to annual at their 2026-03 renewal | **2026-03:** billings and cash far exceed revenue, and deferred revenue jumps. MRR shows contraction with driver *interval switch*, because annual = 10/12 of monthly. Logo churn is unaffected. |
-| E6 | Large refund to a Scale customer for service already delivered (dispute settled). The customer stays. | **2026-04:** refunds line, with lower net revenue and net cash. MRR is unaffected. (Shares the month with E3, which tests whether the note handles two events.) |
+| E6 | Large refund to a Scale customer for service already delivered (dispute settled). The customer stays. | **2026-04:** a $1,899 delivered-portion refund reduces net revenue and net cash. This is measured against the month's gross figures, not as an absolute fall, because the business is growing. MRR is unaffected. The same month has an organic $4,036 pro-rata annual refund, which is unearned and must not touch revenue. (E3 also falls in this month, which tests whether the note handles several events.) |
 | E7 | Win-back campaign: a batch of churned customers return | **2026-05:** reactivation MRR well above its trailing 3-month average. |
 | E8 | **Control:** no planted event | **2026-06:** no expected signal. The note must not make anomaly claims that no threshold-crossing fact supports. |
 
@@ -133,6 +133,7 @@ Revenue recognition, changed from v1:
    - with no tools, the model can't read the answer key or any other file
 5. **Evaluation**, every note against the answer key:
    - **Grounding:** each number in the note must equal a cited fact, after display rounding. Any that doesn't counts as ungrounded.
+   - **What counts as a hallucination (only these two):** (a) a number that matches no fact after display rounding, and (b) a cause or attribution that the cited facts don't show. An accurate mention of a movement that wasn't planted, such as the 2026-04 dunning cluster, is **never** penalised. The answer key scores what was caught, not what else was reported.
    - **Word-numbers:** a regex flags cardinal words (zero–twenty, tens, hundred, thousand, million, dozen) and multiplicatives (half, halved, double/doubled, triple/tripled, twice, thrice, quarter). Fixed phrases such as "one-off" are allowlisted. The target is 0 violations.
    - **Detection, metrics layer:** each expected signal, checked by threshold in SQL.
    - **Detection, narrative layer:** does the note for that month mention the signal? This is checked with keyword and fact-ID rules, and a manual review is recorded.
@@ -178,9 +179,9 @@ the-revenue-bridge/
 | Day | Work | Done when |
 |-----|------|-----------|
 | 1 | Metric definitions, scenario, repo scaffold, generator skeleton (monthly plans, renewals, voluntary churn) | **✅ Gate 1 signed off 2026-10-29** |
-| 2 | Generator messiness: annual, trials, coupons, proration, seats, refunds, dunning. Plant E1–E8 and write the answer key. Export true subscription-state ARR for `test_mrr_rebuild` | Raw tables + answer key + truth |
+| 2 | Generator messiness: annual, trials, coupons, proration, seats, refunds, dunning. Plant E1–E8 and write the answer key. Export true subscription-state ARR for `test_mrr_rebuild` | ✅ Done 2026-10-29: 25 tests pass, 2 wait for SQL |
 | 3 | Staging, daily/month-end MRR, movements and drivers | **⛔ Gate 2: bridge ties every month (pytest), Vandan signs off** |
-| 4 | Retention (logo churn, MRR churn, NRR, GRR, cohorts), revenue recognition | Revenue per line sums to line amount |
+| 4 | Retention (logo churn, MRR churn, NRR, GRR, cohorts), revenue recognition | Revenue per line sums to line amount. The E5 test also checks that 2026-03 cash far exceeds revenue, deferred revenue rises, and MRR falls (monthly → annual contraction) |
 | 5 | Ledger (deferred, AR, ECL, write-offs), cash, three reconciliations | **⛔ Gate 3: all reconciliations show $0.00 unexplained (pytest), Vandan signs off** |
 | 6 | Facts builder. Prompt written, format-linted on the dev seed, frozen. 18 notes via `claude -p`. Then the evaluator | Scorecard produced |
 | 7 | Static site | Page renders locally |

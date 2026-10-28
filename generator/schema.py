@@ -82,6 +82,7 @@ TABLES = {
         "finalized_at": "BIGINT",
         "paid_at": "BIGINT",
         "marked_uncollectible_at": "BIGINT",
+        "attempt_count": "INTEGER",
         "subtotal": "BIGINT",
         "total_discount_amount": "BIGINT",
         "total": "BIGINT",
@@ -124,5 +125,19 @@ TABLES = {
         "reason": "VARCHAR",
         "status": "VARCHAR",
         "currency": "VARCHAR",
+    },
+}
+
+
+# Ground truth from the simulation's internal state. Not Stripe data: never read by the SQL
+# pipeline or the note writer, only by tests (e.g. test_mrr_rebuild).
+TRUTH_TABLES = {
+    "mrr_month_end": {
+        "month": "VARCHAR",                     # YYYY-MM
+        "month_end": "BIGINT",                  # last day 23:59:59 UTC
+        "customer": "VARCHAR",
+        "subscription": "VARCHAR",
+        "arr_cents": "BIGINT",                  # MRR x 12, exact integer cents (definitions 1.13)
+        "past_due": "BOOLEAN",
     },
 }

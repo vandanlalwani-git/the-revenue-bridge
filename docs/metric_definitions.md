@@ -52,7 +52,7 @@ k = 1/12  for interval = year
 - `once` coupons never touch MRR. They are a one-off revenue and cash effect.
 - A 100%-off coupon gives MRR = 0, so that customer is **not** a paying customer.
 
-**1.7 Trials.** MRR = 0 during a trial. The first paid period counts as **New**.
+**1.7 Trials.** MRR = 0 during a trial. The first paid period counts as **New**. Stripe bills a trial with a $0 invoice whose lines carry the plan's price but `amount = 0`, so a governing line with `amount = 0` contributes 0 to MRR, whatever its price.
 
 **1.8 Cancellation.**
 - A voluntary cancel on a monthly plan is always `cancel_at_period_end`. MRR continues until `ended_at`, the period end.
@@ -169,12 +169,16 @@ Revenue retention(cohort, k) = Σ_{c ∈ cohort} MRRc(E(M_k)) ÷ Σ_{c ∈ cohor
 
 ## 4. Revenue recognition (IFRS 15 / ASC 606)
 
-**4.1 Performance obligation.** Access to the software over the service period. The obligation is satisfied over time and recognised **ratably by day**.
+**4.1 Performance obligation.** Access to the software over the service period. The obligation is satisfied over time and recognised **ratably by the second**.
+- Stripe prorates by the second: upgrade prorations, seat changes and the pro-rata refund when an annual plan ends early are all computed on seconds remaining.
+- Recognising on the same clock means the revenue and the billing for any part of a period are the same number. A refund of the unused term equals the contract liability left at that moment, to the cent, with no day-rounding residue.
 
 **4.2 Per invoice line.**
-- Each line amount (net of all discounts on that line, including `once` coupons) is spread over `[period_start, period_end)`.
-- **Cumulative cent rounding** is used: revenue to day *n* = round(amount × *n* / N). Each line therefore recognises exactly its own amount in integer cents.
-- Proration credit lines are negative and are spread the same way.
+- Each line amount (net of all discounts on that line, including `once` coupons) is spread over `[period_start, period_end)`. Let N be its length in seconds.
+- **Cumulative cent rounding** is used. Revenue recognised up to instant *d* is `R(d) = round_half_up(amount × (d − period_start) / N)`, computed in integer arithmetic.
+- Revenue for month *t* = R(min(*E(t)*, end)) − R(max(*E(t−1)*, `period_start`)), where end = min(`period_end`, `ended_at`).
+- Each line therefore recognises exactly its own amount in integer cents over its life, and the generator computes prorations and refunds with the same function.
+- Proration credit lines are negative and are spread the same way, rounding half away from zero.
 
 **4.3 Delivered days only.**
 - Revenue accrues from `period_start` to min(`period_end`, `ended_at`).
@@ -286,7 +290,28 @@ Bad-debt expense (P&L) appears beside R3. It is not part of the cash bridge.
 
 ---
 
-## 7. Out of scope in v1
+## 7. Display rounding
+
+**7.1 Compute in cents, round only for display.**
+- Every stored figure is integer cents. MRR is held as ARR cents (§1.13), so MRR in cents = ARR ÷ 12, which is exact and may carry a fraction.
+- Nothing is rounded before display, and no rounded figure is ever fed back into a calculation.
+
+**7.2 Display units.**
+- Money on the page and in notes is shown in whole dollars, or as $k to 1 decimal where a fact provides that form.
+- Percentages are shown to 1 decimal place. Counts are exact.
+- Rounding is half away from zero.
+
+**7.3 Displayed bridges add up.**
+- In any bridge (the MRR bridge and R1–R3), the opening and closing figures are rounded on their own, because they also appear elsewhere on the page.
+- The components are then rounded with the **largest-remainder method**, so that displayed opening + Σ displayed components = displayed closing:
+  1. Round each component.
+  2. Compute the shortfall *k* in display units, which is at most about half the number of components.
+  3. Move *k* components by one unit each, starting with the components whose rounding moved them furthest the other way. Ties go to the larger absolute value, then to bridge order.
+- The adjustment is never more than 1 display unit per component. The "Unexplained" line is computed in cents, and it must be exactly 0 before any display rounding happens.
+
+**7.4 One implementation.** `pipeline/display.py` is the only rounding code. The page, the facts file (which carries each fact's displayed form) and `notes/evaluate.py` all use it. A number in a note is grounded only if it equals a cited fact's displayed form under these rules.
+
+## 8. Out of scope in v1
 
 - **Multi-currency.** The future approach is constant-currency MRR, and deferred revenue plus its release at the historical invoice-date rate (IAS 21, non-monetary).
 - **Usage-based pricing.**

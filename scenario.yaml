@@ -41,14 +41,60 @@ plans:
       annual_price: 30000
       extra_seats_mean: 8     # geometric draw at signup; 0 means no seat item
 
-# ---- day 2 -------------------------------------------------------------
+# ---- lifecycle ---------------------------------------------------------
 annual_share: 0.20            # share of new signups choosing annual billing
 trial:
   days: 14
   share: 0.60                 # share of signups starting with a trial
   conversion: 0.70
+coupons:                      # share of eligible signups that get each coupon
+  partner_share: 0.04         # PARTNER20: 20% off forever
+  launch_share: 0.06          # LAUNCH50: $50 off once, Growth and Scale only
+hazards:                      # per paid monthly period unless noted
+  upgrade: 0.012              # Starter -> Growth, Growth -> Scale, immediate with proration
+  downgrade: 0.008            # Growth -> Starter, Scale -> Growth, at period end
+  seat_add: 0.06              # Scale: +1..5 seats, immediate with proration
+  seat_remove: 0.03           # Scale: -1..3 seats at period end
+  switch_to_annual: 0.004     # at renewal; contraction because annual = 10x monthly
+  annual_early_termination: 0.04   # per annual period; pro-rata refund of the unused term
+  service_credit: 0.004       # 50% refund of the period just delivered; customer stays
+  reactivation: 0.08          # chance a voluntary churner returns 30-300 days later
 dunning:
-  retry_days: [3, 7, 14]      # attempt on day 0, retries on these days; day-14 failure => cancel
-  base_failure_rate: 0.04     # chance a renewal charge fails on day 0
+  retry_days: [3, 7, 14]      # attempt 1h after finalisation, retries on these days after it fails
+  base_failure_rate: 0.04     # chance a renewal charge fails on its first attempt
   recovery_per_retry: 0.35
-planted_events: {}            # E1-E8, filled in on Day 2; also written to data/answer_key.json
+
+# ---- planted events (answer key: data/answer_key.json) -----------------
+planted_events:
+  E1_price_rise:
+    effective: 2025-09-01     # Starter moves to the new price at each renewal from this date
+    monthly_price: 3500
+    annual_price: 35000
+    churn_boost: 0.06         # extra cancel chance for Starter monthly periods starting in the window
+    churn_window: [2025-08-01, 2025-10-01]
+  E2_largest_churn:
+    signup: 2024-03-12T10:00:00
+    extra_seats: 100          # 399 + 100 x 30 = $3,399 MRR
+    cancel_request: 2025-10-20T15:00:00   # ends at period end, 2025-11-12
+  E3_promo_cohort:
+    month: 2026-01
+    signup_multiplier: 1.8
+    promo_share: 0.85         # of that month's signups: no trial, PROMO50 (50% off, 3 months)
+    cliff_churn: 0.45         # cancel chance in the 3rd discounted period
+  E4_card_expiry:
+    at: 2026-01-31T23:59:59   # cards expire; February renewals fail
+    share: 0.12               # of live monthly subscriptions
+    card_update_per_attempt: 0.20
+  E5_annual_push:
+    month: 2026-03
+    switch_share: 0.15        # of eligible monthly renewals in the month
+  E6_large_refund:
+    signup: 2024-06-05T09:00:00
+    extra_seats: 50           # $1,899 MRR; stays a customer
+    refund_at: 2026-04-15T12:00:00   # full refund of the last fully delivered period
+  E7_winback:
+    month: 2026-05
+    pool_churned_between: [2025-01-01, 2026-02-01]
+    share: 0.15               # of voluntary churners in the pool with no live subscription
+  E8_control:
+    month: 2026-06
