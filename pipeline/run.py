@@ -13,7 +13,8 @@ from generator.schema import TABLES
 
 ROOT = Path(__file__).resolve().parents[1]
 SQL_DIR = ROOT / "sql"
-MARTS = ["calendar", "mrr_month_end", "customer_mrr", "mrr_movements", "mrr_drivers", "mrr_bridge",
+MARTS = ["calendar", "mrr_month_end", "customer_mrr", "mrr_movements", "mrr_drivers", "mrr_bridge", "retention_month",
+         "customer_cohort", "cohort_retention", "revenue_by_line", "refund_split", "revenue_month",
          "mrr_bridge_drivers"]
 
 

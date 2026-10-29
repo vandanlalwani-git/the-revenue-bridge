@@ -89,9 +89,9 @@ scenario.yaml ──► generator/generate.py ──► data/raw/*.parquet (Stri
 | E1 | Monthly Starter price rises from $29 to $35, effective at each subscription's first renewal from 2025-09-01. Annual Starter plans move at their renewal. | **2025-09:** expansion with driver *price change*, concentrated in Starter. **2025-09 and 2025-10:** Starter voluntary churn above its trailing 3-month average. |
 | E2 | Largest Scale customer (monthly, about 60 seats) cancels, ending in 2025-11 | **2025-11:** one logo makes up more than 50% of churned MRR, and gross MRR churn % far exceeds logo churn %. |
 | E3 | Most of the 2026-01 cohort signs up on a promo: no trial, 50% off for 3 months (repeating coupon) | **2026-04:** expansion with driver *discount ended*, attributable to the 2026-01 cohort. Voluntary churn concentrated in that cohort. Logo-retention cliff at M3 for the 2026-01 cohort. |
-| E4 | A batch of cards expires at the end of 2026-01, so those customers' 2026-02 renewals fail | **Primary (counts):** 2026-02: customers entering dunning spike, involuntary churn count up (failures on renewal days 1–14), and customers still in dunning at month-end elevated (days 15–28). 2026-03: involuntary churn count up again as the spill-over clears. **Supporting:** at-risk MRR at 2026-02 month-end elevated and back to baseline at 2026-03 month-end; bad-debt expense up. At-risk MRR is not primary evidence, because an organic cluster of 3 Scale customers in dunning moves it as much at 2026-04 month-end ($2,074 against $2,025). |
+| E4 | A batch of cards expires at the end of 2026-01, so those customers' 2026-02 renewals fail | **Primary (counts):** 2026-02: customers entering dunning spike, involuntary churn count up (failures on renewal days 1–14), and customers still in dunning at month-end elevated (days 15–28). 2026-03: involuntary churn count up again as the spill-over clears. **Supporting:** at-risk MRR at 2026-02 month-end elevated and back to baseline at 2026-03 month-end; bad-debt expense up. At-risk MRR is not primary evidence: before adjustment 5, an organic cluster of 3 Scale customers in dunning moved it as much at 2026-04 month-end ($2,074 against $2,025), and a dollar measure is that fragile in any random path. |
 | E5 | Annual-prepay push: monthly customers switch to annual at their 2026-03 renewal | **2026-03:** billings and cash far exceed revenue, and deferred revenue jumps. MRR shows contraction with driver *interval switch*, because annual = 10/12 of monthly. Logo churn is unaffected. |
-| E6 | Large refund to a Scale customer for service already delivered (dispute settled). The customer stays. | **2026-04:** a $1,899 delivered-portion refund reduces net revenue and net cash. This is measured against the month's gross figures, not as an absolute fall, because the business is growing. MRR is unaffected. The same month has an organic $4,036 pro-rata annual refund, which is unearned and must not touch revenue. (E3 also falls in this month, which tests whether the note handles several events.) |
+| E6 | Large refund to a Scale customer for service already delivered (dispute settled). The customer stays. | **2026-04:** a $1,899 delivered-portion refund reduces net revenue and net cash. This is measured against the month's gross figures, not as an absolute fall, because the business is growing. MRR is unaffected. (E3 also falls in this month, which tests whether the note handles several events.) |
 | E7 | Win-back campaign: a batch of churned customers return | **2026-05:** reactivation MRR well above its trailing 3-month average. |
 | E8 | **Control:** no planted event | **2026-06:** no expected signal. The note must not make anomaly claims that no threshold-crossing fact supports. |
 
@@ -158,8 +158,8 @@ the-revenue-bridge/
 │  ├─ 00_staging.sql       # typed lines, calendar, dunning spells, round_half_up macro
 │  ├─ 10_mrr.sql           # month-end MRR (as ARR cents) rebuilt from invoice lines, at-risk flag
 │  ├─ 20_mrr_movements.sql # movements, drivers, the bridge (+ blind-spot count)
-│  ├─ 30_retention.sql     # logo churn, MRR churn, NRR, GRR, cohorts
-│  ├─ 40_revenue.sql       # daily ratable recognition, delivered days only
+│  ├─ 30_retention.sql     # logo churn, MRR churn, NRR, GRR (numerators/denominators), cohorts
+│  ├─ 40_revenue.sql       # by-second recognition over delivered service, refund split, monthly revenue/cash
 │  ├─ 50_ledger.sql        # deferred revenue + AR rollforwards, ECL, write-offs
 │  └─ 60_reconciliation.sql
 ├─ pipeline/run.py        # builds sql/*.sql, exports data/marts/*.parquet
@@ -182,7 +182,7 @@ the-revenue-bridge/
 | 1 | Metric definitions, scenario, repo scaffold, generator skeleton (monthly plans, renewals, voluntary churn) | **✅ Gate 1 signed off 2026-10-29** |
 | 2 | Generator messiness: annual, trials, coupons, proration, seats, refunds, dunning. Plant E1–E8 and write the answer key. Export true subscription-state ARR for `test_mrr_rebuild` | ✅ Done 2026-10-29: 25 tests pass, 2 wait for SQL |
 | 3 | Staging, month-end MRR, movements and drivers, display rounding | **⛔ Gate 2 (awaiting sign-off): bridge ties all 30 months; rebuild = truth for all 7,257 customer-months** |
-| 4 | Retention (logo churn, MRR churn, NRR, GRR, cohorts), revenue recognition | Revenue per line sums to line amount. The E5 test also checks that 2026-03 cash far exceeds revenue, deferred revenue rises, and MRR falls (monthly → annual contraction) |
+| 4 | Retention (logo churn, MRR churn, NRR, GRR, cohorts), revenue recognition by the second, refund split | ✅ Done 2026-10-29: revenue matches an independent Python recomputation every month; D4 and E5 checks pass |
 | 5 | Daily MRR snapshots for average MRR (R1), ledger (deferred, AR, ECL, write-offs), cash, three reconciliations | **⛔ Gate 3: all reconciliations show $0.00 unexplained (pytest), Vandan signs off** |
 | 6 | Facts builder. Prompt written, format-linted on the dev seed, frozen. 18 notes via `claude -p`. Then the evaluator | Scorecard produced |
 | 7 | Static site | Page renders locally |

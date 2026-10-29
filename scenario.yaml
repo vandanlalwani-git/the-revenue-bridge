@@ -22,24 +22,35 @@ plans:
     mix: 0.55                 # share of new signups
     monthly_price: 2900
     annual_price: 29000       # 10x monthly
-    monthly_churn: 0.045      # chance a customer requests cancellation in any given period
+    monthly_churn: 0.05       # chance a customer requests cancellation in any given period (was 0.045, adj. 5)
   growth:
     name: Growth
     mix: 0.33
     monthly_price: 9900
     annual_price: 99000
-    monthly_churn: 0.025
+    monthly_churn: 0.008      # was 0.025 (adjustment 5)
   scale:
     name: Scale
     mix: 0.12
     monthly_price: 39900      # base, includes 10 seats
     annual_price: 399000
-    monthly_churn: 0.012
+    monthly_churn: 0.004      # was 0.012 (adjustment 5)
     seats:
       included: 10
       monthly_price: 3000     # per extra seat
       annual_price: 30000
       extra_seats_mean: 8     # geometric draw at signup; 0 means no seat item
+
+# ---- benchmark targets (adjustment 5, 2026-10-29) ----------------------
+# The churn and expansion hazards were tuned so the 18 reporting months land inside these ranges.
+# Medians are over the reporting months; scripts compute them from the marts, not from these inputs.
+benchmark_targets:
+  logo_churn_monthly_mean_pct: [3.0, 5.0]   # Tunguz, "The Innovator's Dilemma for SaaS Startups" (2015): SMB 3-7%
+                                            # monthly, his "general observations"; lower half because GRR below points lower
+  nrr_median_pct: [90, 106]                 # SaaS Capital, 2025 B2B SaaS Retention Benchmarks, Fig. 2: ACV < $12k,
+                                            # NRR 25th-75th percentile 90%-106% (median 98%); >1,000 companies, >$1M ARR
+  grr_median_pct: [80, 90]                  # same report, Fig. 1: ACV < $12k median GRR 90%; floor of 80% because our
+                                            # ACV (~$1.9k) sits at the bottom of that bucket and the survey excludes <$1M ARR
 
 # ---- lifecycle ---------------------------------------------------------
 annual_share: 0.20            # share of new signups choosing annual billing
@@ -51,18 +62,18 @@ coupons:                      # share of eligible signups that get each coupon
   partner_share: 0.04         # PARTNER20: 20% off forever
   launch_share: 0.06          # LAUNCH50: $50 off once, Growth and Scale only
 hazards:                      # per paid monthly period unless noted
-  upgrade: 0.012              # Starter -> Growth, Growth -> Scale, immediate with proration
-  downgrade: 0.008            # Growth -> Starter, Scale -> Growth, at period end
-  seat_add: 0.06              # Scale: +1..5 seats, immediate with proration
-  seat_remove: 0.03           # Scale: -1..3 seats at period end
+  upgrade: 0.016              # Starter -> Growth, Growth -> Scale, immediate with proration (was 0.012)
+  downgrade: 0.003            # Growth -> Starter, Scale -> Growth, at period end (was 0.008)
+  seat_add: 0.08              # Scale: +1..5 seats, immediate with proration (was 0.06)
+  seat_remove: 0.01           # Scale: -1..3 seats at period end (was 0.03)
   switch_to_annual: 0.004     # at renewal; contraction because annual = 10x monthly
   annual_early_termination: 0.04   # per annual period; pro-rata refund of the unused term
   service_credit: 0.004       # 50% refund of the period just delivered; customer stays
   reactivation: 0.08          # chance a voluntary churner returns 30-300 days later
 dunning:
   retry_days: [3, 7, 14]      # attempt 1h after finalisation, retries on these days after it fails
-  base_failure_rate: 0.04     # chance a renewal charge fails on its first attempt
-  recovery_per_retry: 0.35
+  base_failure_rate: 0.03     # chance a renewal charge fails on its first attempt (was 0.04)
+  recovery_per_retry: 0.60     # was 0.35
 
 # ---- planted events (answer key: data/answer_key.json) -----------------
 planted_events:
