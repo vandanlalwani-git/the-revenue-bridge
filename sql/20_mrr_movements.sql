@@ -1,23 +1,20 @@
 -- 20_mrr_movements.sql
 -- ============================================================================
--- HEADER (Vandan, in your own words): what this computes, the judgement call,
--- one edge case.
---
---
--- ----------------------------------------------------------------------------
--- Draft notes (Claude), for you to replace:
---   Computes: the MRR bridge. Each customer's month-end MRR is compared with
---     the prior month-end and classed as new, reactivation, expansion,
---     contraction or churn (voluntary / involuntary). Expansion and contraction
---     are split by driver per subscription item (definitions §2).
---   Judgement call: movements are per customer, so a plan switch is never
---     counted as churn plus new. Each item delta gets exactly one driver, by
---     priority: plan change > interval switch > price change > quantity >
---     discount. Monthly -> annual is contraction (§1.11).
---   Edge case: opening and closing come straight from mrr_month_end, never from
---     the movements, so the tie check is a real test. Customers who start and
---     churn inside one month are invisible to month-end snapshots; they are
---     counted separately as the blind spot (§2.5).
+-- HEADER
+--   What it does: the MRR bridge. Opening MRR + new + reactivation + expansion
+--     - contraction - churn = closing MRR. Each customer's month-end MRR is
+--     compared with last month's and the change is labelled. Every rise or fall
+--     also gets a reason: plan change, monthly/annual switch, price change,
+--     seat count, or a coupon ending or starting.
+--   Judgement call: it compares customers, not subscriptions, so a customer who
+--     swaps plans is one expansion or contraction, not a churn plus a new. Each
+--     change gets exactly one reason, picked in that fixed order. Monthly ->
+--     annual is contraction (annual costs 10 months, so MRR falls to 10/12).
+--     Churn is "involuntary" if the last subscription ended on a failed payment.
+--   Edge case: opening and closing come straight from the MRR table, not from
+--     adding up movements, so the "unexplained" line (must be 0) is a real
+--     check. Customers who join and leave inside one month never appear at a
+--     month-end; they are counted separately as the "blind spot".
 -- ============================================================================
 
 CREATE OR REPLACE TABLE customer_mrr AS

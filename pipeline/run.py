@@ -15,6 +15,8 @@ ROOT = Path(__file__).resolve().parents[1]
 SQL_DIR = ROOT / "sql"
 MARTS = ["calendar", "mrr_month_end", "customer_mrr", "mrr_movements", "mrr_drivers", "mrr_bridge", "retention_month",
          "customer_cohort", "cohort_retention", "revenue_by_line", "refund_split", "revenue_month",
+         "mrr_daily_month", "receivables_month_end", "contract_liability_month_end", "ecl_buckets", "ecl_rates", "ecl_month",
+         "reconciliation_month",
          "mrr_bridge_drivers"]
 
 

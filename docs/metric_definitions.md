@@ -17,7 +17,7 @@ Each definition below is a judgement call. Each one states the rule, the formula
 | # | Decision | Outcome |
 |---|----------|---------|
 | D1 | **Source of MRR history** | **Approved.** MRR is rebuilt from invoice line items (period, price, quantity, coupon). It is tested against the generator's true subscription-state MRR for every customer and month-end (§1.13). |
-| D2 | **ECL** | **Approved as an allowance**, using the IFRS 9 simplified approach with a two-bucket provision matrix (§5.2). |
+| D2 | **ECL** | **Approved as an allowance**, using the IFRS 9 simplified approach with a provision matrix (§5.2). Changed at Gate 3 (2026-11-12, Vandan's decision) from two buckets to four, aged by failed card attempts, with an ageing floor. |
 | D3 | **Gross presentation** | **Approved.** Receivables and contract liabilities are shown separately and not netted. A receivable is an unconditional right to consideration, and IFRS 15 presents it apart from contract assets and liabilities. |
 | D4 | **Refunds** | **Changed: split by what is refunded** (§4.5). A refund of delivered service reduces revenue in the month issued (change in transaction price). A refund of the unearned portion reduces the contract liability and has no revenue effect. |
 | D5 | **Collectability at renewal** | **Approved, as a stated simplification** (§4.3). |
@@ -219,21 +219,28 @@ Revenue retention(cohort, k) = Σ_{c ∈ cohort} MRRc(E(M_k)) ÷ Σ_{c ∈ cohor
 
 **5.2 ECL allowance: IFRS 9 simplified approach, provision matrix (D2)**
 
+Receivables are aged by the number of failed card attempts by *E(t)*. Stripe attempts the card 1 hour after finalisation and retries on days 3, 7 and 14. The 4th failure writes the invoice off, so an open invoice has at most 3 failures at a month-end.
+
 | Bucket | Receivables in it at *E(t)* |
 |--------|-----------------------------|
-| **Current** | Finalised, unpaid, no failed charge attempt yet. A renewal charge is attempted 1 hour after finalisation, so this bucket is small. |
-| **In dunning, 0–14 days past due** | At least one failed attempt, and not yet written off. |
+| **current** | Finalised and unpaid, no failed attempt yet. Card billing makes this bucket almost always empty: it holds only invoices finalised in the month's last hour. It matters for invoice-billed customers. |
+| **failed_1** | 1 failed attempt (days 0–3 of dunning). |
+| **failed_2** | 2 failed attempts (days 3–7). |
+| **failed_3** | 3 failed attempts (days 7–14). The next failure is a write-off. |
 
 **Loss rates**
-- A bucket's loss rate *r_b(t)* = Σ earned write-offs that eventually hit receivables which sat in bucket *b* at a month-end ÷ Σ the balances of bucket *b* at those month-ends.
+- A bucket's own loss rate *r_b(t)* = Σ earned write-offs that eventually hit receivables which sat in bucket *b* at a month-end ÷ Σ the balances of bucket *b* at those month-ends.
 - The rate is measured over the **trailing 12 month-ends to E(t−1)**, for invoices already resolved (paid or written off).
-- The 2024 burn-in gives the matrix its history, so rates exist from 2025-01.
 - The numerator is **earned** write-offs only. The unearned portion is derecognised against the contract liability and is not a credit loss.
+- **No history:** a failed_* bucket with no balances in the window borrows the pooled rate of all failed_* buckets. The current bucket has no fallback, because it holds no failed payment.
+- **Ageing floor:** the applied rate of a bucket is the highest rate among it and every earlier bucket, so an invoice slipping to a later retry stage never lowers the allowance. This is how current conditions reach the allowance. When a wave of failures moves balances into later stages, the allowance follows them at the higher rates, with no separate overlay parameter. It is not a forecast of future economic conditions. IFRS 9 also asks for forecasts, and none is modelled (§8).
+- `ecl_rates` also stores the count of observed and lost invoices per bucket, so the chance that an invoice in a bucket is never paid (lost ÷ observed) can be shown beside the money-weighted rate.
 
 **Allowance and expense**
-- Allowance(*E(t)*) = Σ_b balance_b(*E(t)*) × *r_b(t)*.
+- Allowance(*E(t)*) = Σ_b round_half_up(balance_b(*E(t)*) × applied rate_b(*t*)).
 - Bad-debt expense(*t*) = earned write-offs(*t*) + Allowance(*E(t)*) − Allowance(*E(t−1)*).
-- The rates are historical with no forward-looking overlay in v1. After E4, the trailing rate rises with the realised losses, and the page labels that change.
+- **Not applied: post-month-end evidence (IAS 10 style).** Every dunning invoice resolves within 14 days, so outcomes known by the close could replace the estimate. This was considered and not applied. It needs a close date that this pipeline doesn't model, and it would turn the allowance into near-hindsight. The amounts are immaterial: the allowance never exceeds $1,000.
+- **Small sample.** There are about 40 month-end balances in 30 months, so the per-bucket rates move a lot from month to month. Money-weighted rates do not rise steadily with stage in this data. Annual invoices sit in the later stages, and only a small earned slice of each is ever lost. The ageing floor corrects for that.
 
 **5.3 Rollforwards** (each must tie to the cent)
 
@@ -317,7 +324,8 @@ Bad-debt expense (P&L) appears beside R3. It is not part of the cash bridge.
 - **Usage-based pricing.**
 - **Mid-period cancellation of monthly plans.** Monthly cancels are always at period end. Early termination with a pro-rata refund is modelled for annual plans only.
 - **Tax and VAT.** All amounts are tax-exclusive.
+- **Forecast overlay on ECL.** IFRS 9 asks for forecasts of future conditions as well as current ones. The matrix reflects current conditions through its ageing floor (§5.2) but models no forecast.
 
 ---
 
-**Sign-off:** ☑ D1 ☑ D2 (provision matrix) ☑ D3 ☑ D4 (split) ☑ D5 (as a simplification) ☑ §1–6 · Gate 1 approved 2026-10-29
+**Sign-off:** ☑ D1 ☑ D2 (provision matrix) ☑ D3 ☑ D4 (split) ☑ D5 (as a simplification) ☑ §1–6 · Gate 1 approved 2026-10-29 · D2 matrix changed to four aged buckets, Gate 3, 2026-11-12

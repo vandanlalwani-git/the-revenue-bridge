@@ -1,18 +1,20 @@
 -- 00_staging.sql
 -- ============================================================================
--- HEADER (Vandan, in your own words): what this computes, the judgement call,
--- one edge case.
---
---
--- ----------------------------------------------------------------------------
--- Draft notes (Claude), for you to replace:
---   Computes: typed staging tables over the raw Stripe export. Each invoice line
---     is joined to its price, product and coupon so later files read one row per
---     line. Also builds the month calendar and the shared rounding macro.
---   Judgement call: month-ends are 23:59:59 UTC on the last day (definitions §1.4),
---     so anything stamped exactly at that second belongs to the month.
---   Edge case: a line's discount may be a `once` coupon. It is kept here, and
---     10_mrr.sql excludes it from MRR (definitions §1.6).
+-- HEADER
+--   What it does: gets the raw Stripe export ready for every later file. It
+--     glues each invoice line to its price, product and coupon, so later files
+--     find everything about a line on one row. It also builds the list of
+--     months, the one rounding rule the whole project uses, and a list of every
+--     invoice that ever had a failed card payment ("dunning" = chasing a
+--     failed payment).
+--   Judgement call: a month ends at 23:59:59 UTC on its last day, so anything
+--     stamped at or before that second belongs to that month. Rounding always
+--     goes half away from zero (2.5 cents -> 3, -2.5 -> -3) and is done in
+--     whole cents, the same way the data generator does it, so nothing drifts.
+--   Edge case: dunning starts at the first failed payment, not a due date. An
+--     invoice that fails and is paid on a retry still has a dunning spell (from
+--     the first failure to the payment). One paid first time never appears.
+--     A "once" coupon is kept here; 10_mrr.sql leaves it out of MRR.
 -- ============================================================================
 
 SET TimeZone = 'UTC';

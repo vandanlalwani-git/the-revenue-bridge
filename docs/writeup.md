@@ -6,7 +6,7 @@
 
 **Test data.** All data is synthetic. A seeded generator writes it in Stripe's object model (seed 20260129). Nothing comes from a real company.
 
-**Answer key timing.** The expected signals in the answer key were finalised **after the data was generated and before any note was written**. Each adjustment was made on 2026-10-29, after the first generation of the test seed, and is listed below so the reader can judge them:
+**Answer key timing.** The expected signals in the answer key were finalised **after the data was generated and before any note was written**. Adjustments 1–5 were made on 2026-10-29 and adjustment 6 on 2026-11-12. All of them came after the first generation of the test seed and before any note was written. They are listed below so the reader can judge them:
 
 1. **E3 cliff rate raised from 0.35 to 0.45.** On first generation, the January 2026 promo cohort's logo-retention drop from M2 to M3 was 19.4 points, against a 20-point check. Non-promo customers in the same cohort diluted it. The planted event was made stronger and the threshold was left unchanged.
 2. **E4 signal changed to counts.** The first answer key used at-risk MRR as the main evidence. An unplanted cluster of 3 Scale customers in dunning moved at-risk MRR as much at 2026-04 month-end ($2,074) as E4 did at 2026-02 ($2,025). The primary evidence is now counts: customers entering dunning, involuntary churn, and customers in dunning at month-end. At-risk MRR is only supporting evidence.
@@ -32,6 +32,19 @@
 
    On the separate dev seed, the same inputs give 3.01% / 101.8% / 90.3%, so GRR moves by about ±5 points between random paths. Re-running the planted-event checks showed which signals weakened; they are listed in the Gate 3 notes.
 
+6. **E1 and E5 strengthened after the benchmark tuning (2026-11-12, approved by Vandan).** Adjustment 5 left two planted events below their checks. October Starter churn was 1.50× its trailing level (check: above 1.5×). March cash was 1.77× net revenue (check: 2×), and the contract-liability jump was 2.8× the usual month (check: 3×). Two inputs were raised in `scenario.yaml`: E1's extra churn from the price rise, 0.06 → 0.09, and E5's share of monthly renewals switching to annual, 0.15 → 0.20.
+
+   | Signal | Before | After | Check |
+   |---|---|---|---|
+   | E1 October Starter voluntary churn vs trailing | 1.50× | 2.25× | > 1.5× |
+   | E5 March net cash / net revenue | 1.77× | 2.50× | ≥ 2× |
+   | E5 contract-liability jump vs usual month | 2.82× | 4.19× | ≥ 3× |
+   | E5 annual-switch contraction (MRR) | $810 | $2,006 | ≥ 5× any recent month |
+
+   The benchmarks stayed in range: logo churn 3.12% (mean), NRR 102.4% (median), GRR 84.3% (median). The generator draws random numbers in sequence, so changing two inputs also reshuffled unrelated activity. In the new data, one unplanted Scale customer ($999 MRR) is in dunning at the June 2026 month-end, which is the control month. An organic write-off of $599.68 lands in January 2026, just before E4. In September 2025, plan changes ($670 MRR, 3 customers) out-earn the price change ($514, 87 customers) in dollars.
+
+   Three checks were affected by the reshuffle and were aligned with the roles the answer key already gives. The answer key itself was not changed. E1 is checked by number of customers expanding, not dollars. E4's at-risk MRR, which is supporting evidence, must be above 2× its trailing level rather than 3×. E8, the control month, is checked on counts of customers in dunning and entering dunning, not on at-risk MRR. Data mining was avoided: the data was not regenerated again to make the checks pass.
+
 **Prompt freeze.** The note prompt was frozen before any evaluation result was viewed. `notes/FREEZE.json` records the prompt's SHA-256, the model and the CLI version. Each note records the hash it was generated with, and the evaluator refuses to run on a mismatch. Before the freeze, the only check run was a format lint (length, citation syntax, digits only) on a separate development seed.
 
 **What the AI does and does not do.** The facts file **pre-computes the top movers and the deltas against the trailing 3-month average** for every headline metric. The AI's job is to select, rank and narrate figures already computed. It does not discover anomalies in raw data.
@@ -43,3 +56,4 @@
 - The accounting: MRR vs IFRS 15 revenue vs cash, and the three bridges
 - Evaluation results: caught or missed, ungrounded numbers, word-numbers
 - Limits: synthetic data, USD only, the simplifications in the metric definitions (D5 and others)
+- The ECL provision matrix (four buckets aged by failed card attempts, with an ageing floor) rests on about 40 month-end balances, so its rates are noisy. It reflects current conditions but models no forecast. Post-month-end evidence (IAS 10 style) was considered and not applied. The current bucket is structurally near-empty under card billing.

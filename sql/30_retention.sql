@@ -1,21 +1,18 @@
 -- 30_retention.sql
 -- ============================================================================
--- HEADER (Vandan, in your own words): what this computes, the judgement call,
--- one edge case.
---
---
--- ----------------------------------------------------------------------------
--- Draft notes (Claude), for you to replace:
---   Computes: monthly churn and retention rates (definitions §3) and the cohort
---     table. Every rate is stored as a numerator and a denominator. Percentages
---     are made only at display (§7).
---   Judgement call: logo churn's denominator is paying customers at the prior
---     month-end. Customers who are new or reactivated in the month can't churn in
---     it, as far as the rate is concerned. NRR and GRR use a 12-month base:
---     customers paying at E(t-12).
---   Edge case: a cohort is set by the first paid day, not the first month-end,
---     so a customer who paid and left within one month is in the cohort but not
---     retained at M0. M0 logo retention can therefore be below 100%.
+-- HEADER
+--   What it does: the retention numbers. Logo churn (share of customers lost),
+--     gross and net MRR churn, 12-month NRR and GRR, and cohort tables (groups
+--     of customers by the month they first paid, followed over time). Each rate
+--     is stored as its top and bottom number; percentages are made on screen.
+--   Judgement call: logo churn = customers lost this month / paying customers at
+--     last month-end, so this month's new customers are not in the rate. NRR and
+--     GRR take the customers paying exactly 12 months ago and compare their MRR
+--     now with their MRR then. GRR caps each customer at their old amount, so
+--     upgrades can't hide losses.
+--   Edge case: a cohort is the month of a customer's first paid day, not first
+--     month-end. Someone who paid and left in that first month is in the cohort
+--     but already gone at month-end, so month-0 retention can be under 100%.
 -- ============================================================================
 
 CREATE OR REPLACE TABLE retention_month AS

@@ -4,3 +4,6 @@ __pycache__/
 *.pyc
 .DS_Store
 data/marts/
+
+# Personal reference copy, never committed
+Revenue Bridge SQL Guide.html

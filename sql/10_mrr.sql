@@ -1,21 +1,18 @@
 -- 10_mrr.sql
 -- ============================================================================
--- HEADER (Vandan, in your own words): what this computes, the judgement call,
--- one edge case.
---
---
--- ----------------------------------------------------------------------------
--- Draft notes (Claude), for you to replace:
---   Computes: MRR at every month-end, per subscription item, rebuilt from invoice
---     lines (D1). Held as ARR in integer cents so annual / 12 never leaves a
---     fraction (definitions §1.13).
---   Judgement call: when several lines cover a month-end, the latest-starting
---     non-credit line governs, and MRR uses that line's price x quantity, never
---     its prorated amount (§1.2-1.3). After a mid-month upgrade, the proration
---     charge line governs, so the new price counts from the upgrade date.
---   Edge case: trial lines carry the plan's price but amount = 0, so they count
---     as 0 MRR (§1.7). A customer who has asked to cancel still counts until
---     ended_at (§1.8).
+-- HEADER
+--   What it does: works out each subscription's MRR at every month-end, rebuilt
+--     from invoice lines. Stripe's subscription table only shows today, so the
+--     history has to come from the invoices. Kept as yearly cents (ARR) so an
+--     annual plan never leaves a fraction of a cent; MRR = ARR / 12 on screen.
+--   Judgement call: when several invoice lines cover the month-end, the line
+--     that started most recently wins. After a mid-month upgrade that is the
+--     upgrade line, so the new price counts. MRR uses list price x quantity,
+--     never the part-period amount actually charged. Customers whose payment is
+--     failing stay in MRR, flagged past_due, until they are actually cancelled.
+--   Edge case: a free-trial line counts as $0, a one-off ("once") coupon does
+--     not lower MRR, and credit lines (refunds of unused time) never set the
+--     price. Monthly -> annual: the annual line counts x1, so MRR drops to 10/12.
 -- ============================================================================
 
 CREATE OR REPLACE TABLE mrr_item_month_end AS

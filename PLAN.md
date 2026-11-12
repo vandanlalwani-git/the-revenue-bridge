@@ -106,7 +106,7 @@ Revenue recognition, changed from v1:
 - Uncollectible invoices **do not reverse revenue**. The earned portion of the receivable goes to bad-debt expense under IFRS 9 ECL.
 - The unearned portion, the days after cancellation, is derecognised against the contract liability and has no P&L effect.
 - Write-offs appear in the billings → cash bridge.
-- Bad-debt expense uses an IFRS 9 provision matrix with two buckets (current, and 0–14 days in dunning). Each bucket's trailing loss rate starts from the burn-in history.
+- Bad-debt expense uses an IFRS 9 provision matrix with four buckets aged by failed card attempts (current, failed_1, failed_2, failed_3). Each bucket's trailing loss rate starts from the burn-in history. An empty bucket borrows the pooled rate, and an ageing floor means a later bucket never gets a lower rate than an earlier one.
 - Refunds are split. A refund of delivered service reduces revenue. A refund of the unearned portion reduces the contract liability.
 - A monthly → annual switch counts as contraction.
 
@@ -133,7 +133,7 @@ Revenue recognition, changed from v1:
    - with no tools, the model can't read the answer key or any other file
 5. **Evaluation**, every note against the answer key:
    - **Grounding:** each number in the note must equal a cited fact, after display rounding. Any that doesn't counts as ungrounded.
-   - **What counts as a hallucination (only these two):** (a) a number that matches no fact after display rounding, and (b) a cause or attribution that the cited facts don't show. An accurate mention of a movement that wasn't planted, such as the 2026-04 dunning cluster, is **never** penalised. The answer key scores what was caught, not what else was reported.
+   - **What counts as a hallucination (only these two):** (a) a number that matches no fact after display rounding, and (b) a cause or attribution that the cited facts don't show. An accurate mention of a movement that wasn't planted, such as the Scale customer in dunning at the June 2026 month-end, is **never** penalised. The answer key scores what was caught, not what else was reported.
    - **Word-numbers:** a regex flags cardinal words (zero–twenty, tens, hundred, thousand, million, dozen) and multiplicatives (half, halved, double/doubled, triple/tripled, twice, thrice, quarter). Fixed phrases such as "one-off" are allowlisted. The target is 0 violations.
    - **Detection, metrics layer:** each expected signal, checked by threshold in SQL.
    - **Detection, narrative layer:** does the note for that month mention the signal? This is checked with keyword and fact-ID rules, and a manual review is recorded.
@@ -160,8 +160,9 @@ the-revenue-bridge/
 │  ├─ 20_mrr_movements.sql # movements, drivers, the bridge (+ blind-spot count)
 │  ├─ 30_retention.sql     # logo churn, MRR churn, NRR, GRR (numerators/denominators), cohorts
 │  ├─ 40_revenue.sql       # by-second recognition over delivered service, refund split, monthly revenue/cash
-│  ├─ 50_ledger.sql        # deferred revenue + AR rollforwards, ECL, write-offs
-│  └─ 60_reconciliation.sql
+│  ├─ 45_mrr_daily.sql     # daily MRR snapshots for average MRR (same governing rule as 10)
+│  ├─ 50_ledger.sql        # contract liability and receivables as stocks, provision matrix, ECL allowance
+│  └─ 60_reconciliation.sql # R1-R3 and the rollforwards, each with an unexplained line
 ├─ pipeline/run.py        # builds sql/*.sql, exports data/marts/*.parquet
 ├─ pipeline/display.py    # the only display-rounding code (definitions §7)
 ├─ notes/  prompt.md, FREEZE.json, build_facts.py, write_notes.py, evaluate.py, facts/, output/
@@ -171,7 +172,7 @@ the-revenue-bridge/
 └─ docs/   metric_definitions.md, writeup.md
 ```
 
-**SQL ownership:** Claude drafts each SQL file, and Vandan annotates it. Every file opens with a header in Vandan's words covering what the file computes, the judgement call it makes and one edge case it handles. A file isn't done until it can be defended without notes.
+**SQL ownership:** Claude drafts each SQL file and writes its header in plain words: what the file computes, the judgement call it makes and one edge case it handles. Vandan reviews the logic through a plain-English walkthrough of every file (changed from "Vandan annotates" on 2026-11-12, at Vandan's request). The write-up must say the SQL and headers were written by Claude and reviewed by Vandan, so it doesn't overclaim authorship.
 
 ---
 
@@ -181,9 +182,9 @@ the-revenue-bridge/
 |-----|------|-----------|
 | 1 | Metric definitions, scenario, repo scaffold, generator skeleton (monthly plans, renewals, voluntary churn) | **✅ Gate 1 signed off 2026-10-29** |
 | 2 | Generator messiness: annual, trials, coupons, proration, seats, refunds, dunning. Plant E1–E8 and write the answer key. Export true subscription-state ARR for `test_mrr_rebuild` | ✅ Done 2026-10-29: 25 tests pass, 2 wait for SQL |
-| 3 | Staging, month-end MRR, movements and drivers, display rounding | **⛔ Gate 2 (awaiting sign-off): bridge ties all 30 months; rebuild = truth for all 7,257 customer-months** |
+| 3 | Staging, month-end MRR, movements and drivers, display rounding | **✅ Gate 2 signed off: bridge ties all 30 months; rebuild = truth for all 7,257 customer-months** |
 | 4 | Retention (logo churn, MRR churn, NRR, GRR, cohorts), revenue recognition by the second, refund split | ✅ Done 2026-10-29: revenue matches an independent Python recomputation every month; D4 and E5 checks pass |
-| 5 | Daily MRR snapshots for average MRR (R1), ledger (deferred, AR, ECL, write-offs), cash, three reconciliations | **⛔ Gate 3: all reconciliations show $0.00 unexplained (pytest), Vandan signs off** |
+| 5 | Daily MRR snapshots for average MRR (R1), ledger (contract liability, receivables, IFRS 9 provision matrix), cash, three reconciliations | **✅ Gate 3 signed off 2026-11-12: R1–R3 and all rollforwards show $0.00 unexplained in all 30 months; adjustment 6 applied; provision matrix moved to four aged buckets. Data and answer key frozen.** |
 | 6 | Facts builder. Prompt written, format-linted on the dev seed, frozen. 18 notes via `claude -p`. Then the evaluator | Scorecard produced |
 | 7 | Static site | Page renders locally |
 | 8 | Stripe test-clock check, GitHub Actions Pages workflow, polish | Same SQL runs on the Stripe export |
@@ -223,7 +224,7 @@ Days 10–11 are slack.
 
 | Topic | Decision |
 |-------|----------|
-| SQL | Claude drafts, Vandan annotates |
+| SQL | Claude drafts and writes the headers; Vandan reviews |
 | Notes | `claude -p` headless (bundled Claude Code 2.1.308), isolated with no tools |
 | Hosting | GitHub Pages from `site/` through GitHub Actions (`docs/` holds the definitions and write-up) |
 | Python | local `.venv` (system Python 3.9.6, DuckDB 1.4.5) |

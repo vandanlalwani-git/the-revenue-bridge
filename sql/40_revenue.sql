@@ -1,23 +1,21 @@
 -- 40_revenue.sql
 -- ============================================================================
--- HEADER (Vandan, in your own words): what this computes, the judgement call,
--- one edge case.
---
---
--- ----------------------------------------------------------------------------
--- Draft notes (Claude), for you to replace:
---   Computes: IFRS 15 revenue per invoice line per month, recognised by the
---     second over the service delivered (definitions §4). Also the refund split
---     (D4) and the monthly revenue, billings and cash summary.
---   Judgement call: service ends at min(period_end, ended_at). Days in dunning
---     count as delivered (D5, a stated simplification). An uncollectible invoice
---     does not reverse revenue: its unearned portion (after ended_at) leaves the
---     contract liability on write-off, and its earned portion is a credit loss
---     handled in 50_ledger.sql.
---   Edge case: a refund is unearned only up to the unearned amount still on its
---     invoice once the subscription has ended. A refund on a live subscription
---     (a service credit, E6) is all delivered and reduces revenue in the month
---     it is issued.
+-- HEADER
+--   What it does: revenue under IFRS 15. Each invoice line is earned evenly,
+--     second by second, over the service period it pays for, then cut into
+--     calendar months. Also splits every refund into "for service already
+--     given" and "for service not yet given", and builds the monthly summary of
+--     billings, revenue, refunds, write-offs and cash.
+--   Judgement call: service stops at the end of the period or when the
+--     subscription ends, whichever is first. Days while a payment is failing
+--     still count as service delivered (a stated simplification). An invoice
+--     that is never paid does not undo revenue: the earned part becomes a credit
+--     loss (50_ledger.sql), the unearned part just leaves the contract liability.
+--   Edge case: a refund counts as "not yet given" only once the subscription has
+--     ended, and only up to the unearned money left on that invoice. A goodwill
+--     credit on a live subscription (E6) is all for delivered service, so it
+--     cuts revenue in the month it is paid. Rounding works on running totals,
+--     so a line's monthly pieces always add up exactly to the line.
 -- ============================================================================
 
 -- Revenue recognised on a line up to instant d, with cumulative cent rounding (§4.2).

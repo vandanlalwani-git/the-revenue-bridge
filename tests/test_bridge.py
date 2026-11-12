@@ -116,14 +116,16 @@ def test_e1_price_change_expansion_in_september_only(marts):
     assert sep > 0 and customers >= 50
     for month in ("2025-06", "2025-07", "2025-08"):
         assert driver(marts, month, "price_change", "expansion")[0] == 0
-    # All of it is Starter, and it is the largest expansion driver of the month.
+    # All of it is Starter, and it is the expansion driver with the most customers. The answer key's
+    # E1 signal is about customers expanding, not dollars: after adjustment 6, 3 plan changes ($670)
+    # out-earn the price change ($514, 87 customers) in dollars.
     starter_only = marts.execute("""
         SELECT bool_and(i.product = 'Starter') FROM mrr_drivers d
         JOIN mrr_item_month_end i ON i.month = d.month AND i.subscription_item = d.subscription_item
         WHERE d.month = '2025-09' AND d.driver = 'price_change'""").fetchone()[0]
     assert starter_only
     top = marts.execute("SELECT driver FROM mrr_bridge_drivers WHERE month = '2025-09' AND movement = 'expansion' "
-                        "ORDER BY arr_delta_cents DESC LIMIT 1").fetchone()[0]
+                        "ORDER BY customers DESC LIMIT 1").fetchone()[0]
     assert top == "price_change"
 
 

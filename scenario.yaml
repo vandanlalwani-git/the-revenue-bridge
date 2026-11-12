@@ -81,7 +81,7 @@ planted_events:
     effective: 2025-09-01     # Starter moves to the new price at each renewal from this date
     monthly_price: 3500
     annual_price: 35000
-    churn_boost: 0.06         # extra cancel chance for Starter monthly periods starting in the window
+    churn_boost: 0.09         # adjustment 6, was 0.06. Extra cancel chance for Starter monthly periods starting in the window
     churn_window: [2025-08-01, 2025-10-01]
   E2_largest_churn:
     signup: 2024-03-12T10:00:00
@@ -98,7 +98,7 @@ planted_events:
     card_update_per_attempt: 0.20
   E5_annual_push:
     month: 2026-03
-    switch_share: 0.15        # of eligible monthly renewals in the month
+    switch_share: 0.20        # adjustment 6, was 0.15. Share of eligible monthly renewals in the month
   E6_large_refund:
     signup: 2024-06-05T09:00:00
     extra_seats: 50           # $1,899 MRR; stays a customer
