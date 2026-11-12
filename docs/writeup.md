@@ -45,9 +45,9 @@
 
    Three checks were affected by the reshuffle and were aligned with the roles the answer key already gives. The answer key itself was not changed. E1 is checked by number of customers expanding, not dollars. E4's at-risk MRR, which is supporting evidence, must be above 2× its trailing level rather than 3×. E8, the control month, is checked on counts of customers in dunning and entering dunning, not on at-risk MRR. Data mining was avoided: the data was not regenerated again to make the checks pass.
 
-**Prompt freeze.** The note prompt was frozen before any evaluation result was viewed. `notes/FREEZE.json` records the prompt's SHA-256, the model and the CLI version. Each note records the hash it was generated with, and the evaluator refuses to run on a mismatch. Before the freeze, the only check run was a format lint (length, citation syntax, digits only) on a separate development seed.
+**Prompt freeze.** The note prompt was frozen before any evaluation result was viewed. `notes/FREEZE.json` records the prompt's SHA-256, the model and the CLI version. Each note records the hash it was generated with, and the evaluator refuses to run on a mismatch. Before the freeze, the only check run was a format lint (length, citation syntax, digits only) on a separate development seed. All 18 dev-seed notes passed it with the prompt unchanged. The checker itself was corrected once, so it no longer treats the metric names "12-month" and "3-month" as uncited figures.
 
-**What the AI does and does not do.** The facts file **pre-computes the top movers and the deltas against the trailing 3-month average** for every headline metric. The AI's job is to select, rank and narrate figures already computed. It does not discover anomalies in raw data.
+**What the AI does and does not do.** The facts file **pre-computes the top movers, the deltas against the trailing 3-month average and the ratio to that average ("2.4×")** for every headline metric. The AI's job is to select, rank and narrate figures already computed. It does not discover anomalies in raw data.
 
 **What counts as a hallucination.** Only two things: a number that matches no fact after display rounding, and a cause the cited facts don't show. An accurate mention of a movement that wasn't planted is not penalised.
 

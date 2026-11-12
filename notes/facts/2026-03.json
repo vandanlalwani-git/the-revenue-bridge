@@ -1,0 +1,1622 @@
+{
+ "month": "2026-03",
+ "notes": [
+  "Money is in US dollars. MRR figures are monthly run-rate; revenue follows IFRS 15.",
+  "Each fact's 'display' is how it must be written. 'display_k' is an allowed short form.",
+  "A trailing average covers the 3 calendar months before this month."
+ ],
+ "facts": [
+  {
+   "id": "F1",
+   "group": "mrr_bridge",
+   "label": "Opening MRR",
+   "value": 70198,
+   "display": "$70,198",
+   "display_k": "$70.2k"
+  },
+  {
+   "id": "F2",
+   "group": "mrr_bridge",
+   "label": "New MRR",
+   "value": 4829,
+   "display": "$4,829"
+  },
+  {
+   "id": "F3",
+   "group": "mrr_bridge",
+   "label": "Reactivation MRR",
+   "value": 0,
+   "display": "$0"
+  },
+  {
+   "id": "F4",
+   "group": "mrr_bridge",
+   "label": "Expansion MRR",
+   "value": 919,
+   "display": "$919"
+  },
+  {
+   "id": "F5",
+   "group": "mrr_bridge",
+   "label": "Contraction MRR (reduces MRR)",
+   "value": 2006,
+   "display": "$2,006"
+  },
+  {
+   "id": "F6",
+   "group": "mrr_bridge",
+   "label": "Voluntary churn MRR (reduces MRR)",
+   "value": 275,
+   "display": "$275"
+  },
+  {
+   "id": "F7",
+   "group": "mrr_bridge",
+   "label": "Involuntary churn MRR (failed payments, reduces MRR)",
+   "value": 1069,
+   "display": "$1,069"
+  },
+  {
+   "id": "F8",
+   "group": "mrr_bridge",
+   "label": "Closing MRR",
+   "value": 72596,
+   "display": "$72,596",
+   "display_k": "$72.6k"
+  },
+  {
+   "id": "F9",
+   "group": "mrr_bridge",
+   "label": "Unexplained (must be 0)",
+   "value": 0,
+   "display": "$0"
+  },
+  {
+   "id": "F10",
+   "group": "customers",
+   "label": "Paying customers at month-end",
+   "value": 480,
+   "display": "480"
+  },
+  {
+   "id": "F11",
+   "group": "customers",
+   "label": "Paying customers at prior month-end",
+   "value": 450,
+   "display": "450"
+  },
+  {
+   "id": "F12",
+   "group": "customers",
+   "label": "New customers",
+   "value": 45,
+   "display": "45"
+  },
+  {
+   "id": "F13",
+   "group": "customers",
+   "label": "Reactivated customers",
+   "value": 0,
+   "display": "0"
+  },
+  {
+   "id": "F14",
+   "group": "customers",
+   "label": "Customers expanding",
+   "value": 12,
+   "display": "12"
+  },
+  {
+   "id": "F15",
+   "group": "customers",
+   "label": "Customers contracting",
+   "value": 52,
+   "display": "52"
+  },
+  {
+   "id": "F16",
+   "group": "customers",
+   "label": "Customers churned voluntarily",
+   "value": 7,
+   "display": "7"
+  },
+  {
+   "id": "F17",
+   "group": "customers",
+   "label": "Customers churned involuntarily (failed payments)",
+   "value": 8,
+   "display": "8"
+  },
+  {
+   "id": "F18",
+   "group": "customers",
+   "label": "Customers who started and left within the month (not in month-end MRR)",
+   "value": 0,
+   "display": "0"
+  },
+  {
+   "id": "F19",
+   "group": "drivers",
+   "label": "Contraction from interval switch: MRR",
+   "value": 2006,
+   "display": "$2,006"
+  },
+  {
+   "id": "F20",
+   "group": "drivers",
+   "label": "Contraction from interval switch: customers",
+   "value": 52,
+   "display": "52"
+  },
+  {
+   "id": "F21",
+   "group": "drivers",
+   "label": "Expansion from plan change: MRR",
+   "value": 754,
+   "display": "$754"
+  },
+  {
+   "id": "F22",
+   "group": "drivers",
+   "label": "Expansion from plan change: customers",
+   "value": 8,
+   "display": "8"
+  },
+  {
+   "id": "F23",
+   "group": "drivers",
+   "label": "Expansion from price change: MRR",
+   "value": 15,
+   "display": "$15"
+  },
+  {
+   "id": "F24",
+   "group": "drivers",
+   "label": "Expansion from price change: customers",
+   "value": 3,
+   "display": "3"
+  },
+  {
+   "id": "F25",
+   "group": "drivers",
+   "label": "Expansion from quantity change: MRR",
+   "value": 150,
+   "display": "$150"
+  },
+  {
+   "id": "F26",
+   "group": "drivers",
+   "label": "Expansion from quantity change: customers",
+   "value": 1,
+   "display": "1"
+  },
+  {
+   "id": "F27",
+   "group": "retention",
+   "label": "Logo churn (customers lost / paying at prior month-end)",
+   "value": 3.3,
+   "display": "3.3%"
+  },
+  {
+   "id": "F28",
+   "group": "retention",
+   "label": "Gross MRR churn (churn + contraction) / opening MRR",
+   "value": 4.8,
+   "display": "4.8%"
+  },
+  {
+   "id": "F29",
+   "group": "retention",
+   "label": "Net MRR churn (churn + contraction - expansion) / opening MRR",
+   "value": 3.5,
+   "display": "3.5%"
+  },
+  {
+   "id": "F30",
+   "group": "retention",
+   "label": "NRR, 12-month",
+   "value": 95.7,
+   "display": "95.7%"
+  },
+  {
+   "id": "F31",
+   "group": "retention",
+   "label": "GRR, 12-month",
+   "value": 77.9,
+   "display": "77.9%"
+  },
+  {
+   "id": "F32",
+   "group": "churn_by_plan",
+   "label": "Growth customers churned, involuntary (failed payments)",
+   "value": 3,
+   "display": "3"
+  },
+  {
+   "id": "F33",
+   "group": "churn_by_plan",
+   "label": "Growth MRR churned, involuntary (failed payments)",
+   "value": 297,
+   "display": "$297"
+  },
+  {
+   "id": "F34",
+   "group": "churn_by_plan",
+   "label": "Growth customers churned, voluntary",
+   "value": 1,
+   "display": "1"
+  },
+  {
+   "id": "F35",
+   "group": "churn_by_plan",
+   "label": "Growth MRR churned, voluntary",
+   "value": 83,
+   "display": "$83"
+  },
+  {
+   "id": "F36",
+   "group": "churn_by_plan",
+   "label": "Scale customers churned, involuntary (failed payments)",
+   "value": 1,
+   "display": "1"
+  },
+  {
+   "id": "F37",
+   "group": "churn_by_plan",
+   "label": "Scale MRR churned, involuntary (failed payments)",
+   "value": 639,
+   "display": "$639"
+  },
+  {
+   "id": "F38",
+   "group": "churn_by_plan",
+   "label": "Starter customers churned, involuntary (failed payments)",
+   "value": 4,
+   "display": "4"
+  },
+  {
+   "id": "F39",
+   "group": "churn_by_plan",
+   "label": "Starter MRR churned, involuntary (failed payments)",
+   "value": 133,
+   "display": "$133"
+  },
+  {
+   "id": "F40",
+   "group": "churn_by_plan",
+   "label": "Starter customers churned, voluntary",
+   "value": 6,
+   "display": "6"
+  },
+  {
+   "id": "F41",
+   "group": "churn_by_plan",
+   "label": "Starter MRR churned, voluntary",
+   "value": 193,
+   "display": "$193"
+  },
+  {
+   "id": "F42",
+   "group": "payments",
+   "label": "Customers with a first failed payment this month",
+   "value": 12,
+   "display": "12"
+  },
+  {
+   "id": "F43",
+   "group": "payments",
+   "label": "Paying customers in dunning at month-end",
+   "value": 0,
+   "display": "0"
+  },
+  {
+   "id": "F44",
+   "group": "payments",
+   "label": "At-risk MRR (customers in dunning at month-end)",
+   "value": 0,
+   "display": "$0"
+  },
+  {
+   "id": "F45",
+   "group": "revenue_cash",
+   "label": "Billings (invoices issued)",
+   "value": 187273,
+   "display": "$187,273",
+   "display_k": "$187.3k"
+  },
+  {
+   "id": "F46",
+   "group": "revenue_cash",
+   "label": "Revenue recognised, before refunds",
+   "value": 75202,
+   "display": "$75,202",
+   "display_k": "$75.2k"
+  },
+  {
+   "id": "F47",
+   "group": "revenue_cash",
+   "label": "Refunds for service already delivered (reduce revenue)",
+   "value": 50,
+   "display": "$50"
+  },
+  {
+   "id": "F48",
+   "group": "revenue_cash",
+   "label": "Net revenue",
+   "value": 75152,
+   "display": "$75,152",
+   "display_k": "$75.2k"
+  },
+  {
+   "id": "F49",
+   "group": "revenue_cash",
+   "label": "Cash collected",
+   "value": 187862,
+   "display": "$187,862",
+   "display_k": "$187.9k"
+  },
+  {
+   "id": "F50",
+   "group": "revenue_cash",
+   "label": "Refunds paid, all",
+   "value": 50,
+   "display": "$50"
+  },
+  {
+   "id": "F51",
+   "group": "revenue_cash",
+   "label": "Net cash collected",
+   "value": 187812,
+   "display": "$187,812",
+   "display_k": "$187.8k"
+  },
+  {
+   "id": "F52",
+   "group": "revenue_cash",
+   "label": "Contract liability (deferred revenue) at month-end",
+   "value": 217305,
+   "display": "$217,305",
+   "display_k": "$217.3k"
+  },
+  {
+   "id": "F53",
+   "group": "revenue_cash",
+   "label": "Change in contract liability",
+   "value": 111535,
+   "display": "$111,535",
+   "display_k": "$111.5k"
+  },
+  {
+   "id": "F54",
+   "group": "revenue_cash",
+   "label": "Receivables at month-end",
+   "value": 0,
+   "display": "$0"
+  },
+  {
+   "id": "F55",
+   "group": "revenue_cash",
+   "label": "Allowance for credit losses at month-end",
+   "value": 0,
+   "display": "$0"
+  },
+  {
+   "id": "F56",
+   "group": "revenue_cash",
+   "label": "Bad-debt expense",
+   "value": 517,
+   "display": "$517"
+  },
+  {
+   "id": "F57",
+   "group": "revenue_cash",
+   "label": "Written off: earned part (credit loss)",
+   "value": 533,
+   "display": "$533"
+  },
+  {
+   "id": "F58",
+   "group": "revenue_cash",
+   "label": "Written off: unearned part (released from contract liability)",
+   "value": 536,
+   "display": "$536"
+  },
+  {
+   "id": "F59",
+   "group": "refunds",
+   "label": "Refunds issued",
+   "value": 1,
+   "display": "1"
+  },
+  {
+   "id": "F60",
+   "group": "refunds",
+   "label": "Refunds: part for service already delivered (reduces revenue)",
+   "value": 50,
+   "display": "$50"
+  },
+  {
+   "id": "F61",
+   "group": "refunds",
+   "label": "Refunds: part for service not yet delivered (reduces contract liability)",
+   "value": 0,
+   "display": "$0"
+  },
+  {
+   "id": "F62",
+   "group": "refunds",
+   "label": "Largest single refund",
+   "value": 50,
+   "display": "$50"
+  },
+  {
+   "id": "F63",
+   "group": "refunds",
+   "label": "Largest single refund: customer",
+   "value": "cus_yu4sf6xmvkLTLy",
+   "display": "cus_yu4sf6xmvkLTLy"
+  },
+  {
+   "id": "F64",
+   "group": "refunds",
+   "label": "Largest single refund: delivered-service part",
+   "value": 50,
+   "display": "$50"
+  },
+  {
+   "id": "F65",
+   "group": "refunds",
+   "label": "Largest single refund: not-yet-delivered part",
+   "value": 0,
+   "display": "$0"
+  },
+  {
+   "id": "F66",
+   "group": "r1_mrr_to_revenue",
+   "label": "R1 Closing MRR",
+   "value": 72596,
+   "display": "$72,596"
+  },
+  {
+   "id": "F67",
+   "group": "r1_mrr_to_revenue",
+   "label": "R1 Timing: closing MRR minus average MRR for the month (subtract)",
+   "value": -549,
+   "display": "-$549"
+  },
+  {
+   "id": "F68",
+   "group": "r1_mrr_to_revenue",
+   "label": "R1 Day count and proration (add; negative means subtract)",
+   "value": 3190,
+   "display": "$3,190"
+  },
+  {
+   "id": "F69",
+   "group": "r1_mrr_to_revenue",
+   "label": "R1 One-off coupons (subtract)",
+   "value": -35,
+   "display": "-$35"
+  },
+  {
+   "id": "F70",
+   "group": "r1_mrr_to_revenue",
+   "label": "R1 Refunds for delivered service (subtract)",
+   "value": -50,
+   "display": "-$50"
+  },
+  {
+   "id": "F71",
+   "group": "r1_mrr_to_revenue",
+   "label": "R1 Net revenue",
+   "value": 75152,
+   "display": "$75,152"
+  },
+  {
+   "id": "F72",
+   "group": "r2_revenue_to_billings",
+   "label": "R2 Net revenue",
+   "value": 75152,
+   "display": "$75,152"
+  },
+  {
+   "id": "F73",
+   "group": "r2_revenue_to_billings",
+   "label": "R2 Refunds for delivered service (add back)",
+   "value": 50,
+   "display": "$50"
+  },
+  {
+   "id": "F74",
+   "group": "r2_revenue_to_billings",
+   "label": "R2 Change in contract liability (add)",
+   "value": 111535,
+   "display": "$111,535"
+  },
+  {
+   "id": "F75",
+   "group": "r2_revenue_to_billings",
+   "label": "R2 Unearned part of write-offs (add)",
+   "value": 536,
+   "display": "$536"
+  },
+  {
+   "id": "F76",
+   "group": "r2_revenue_to_billings",
+   "label": "R2 Unearned part of refunds (add)",
+   "value": 0,
+   "display": "$0"
+  },
+  {
+   "id": "F77",
+   "group": "r2_revenue_to_billings",
+   "label": "R2 Billings",
+   "value": 187273,
+   "display": "$187,273"
+  },
+  {
+   "id": "F78",
+   "group": "r3_billings_to_cash",
+   "label": "R3 Billings",
+   "value": 187273,
+   "display": "$187,273"
+  },
+  {
+   "id": "F79",
+   "group": "r3_billings_to_cash",
+   "label": "R3 Change in receivables (an increase subtracts)",
+   "value": 1658,
+   "display": "$1,658"
+  },
+  {
+   "id": "F80",
+   "group": "r3_billings_to_cash",
+   "label": "R3 Earned part of write-offs (subtract)",
+   "value": -533,
+   "display": "-$533"
+  },
+  {
+   "id": "F81",
+   "group": "r3_billings_to_cash",
+   "label": "R3 Unearned part of write-offs (subtract)",
+   "value": -536,
+   "display": "-$536"
+  },
+  {
+   "id": "F82",
+   "group": "r3_billings_to_cash",
+   "label": "R3 Refunds paid (subtract)",
+   "value": -50,
+   "display": "-$50"
+  },
+  {
+   "id": "F83",
+   "group": "r3_billings_to_cash",
+   "label": "R3 Net cash collected",
+   "value": 187812,
+   "display": "$187,812"
+  },
+  {
+   "id": "F84",
+   "group": "cohorts",
+   "label": "Cohort 2025-09: customers",
+   "value": 27,
+   "display": "27"
+  },
+  {
+   "id": "F85",
+   "group": "cohorts",
+   "label": "Cohort 2025-09: months since start",
+   "value": 6,
+   "display": "6"
+  },
+  {
+   "id": "F86",
+   "group": "cohorts",
+   "label": "Cohort 2025-09: still paying",
+   "value": 24,
+   "display": "24"
+  },
+  {
+   "id": "F87",
+   "group": "cohorts",
+   "label": "Cohort 2025-09: logo retention",
+   "value": 88.9,
+   "display": "88.9%"
+  },
+  {
+   "id": "F88",
+   "group": "cohorts",
+   "label": "Cohort 2025-09: change in logo retention since last month",
+   "value": 0.0,
+   "display": "0.0 pts"
+  },
+  {
+   "id": "F89",
+   "group": "cohorts",
+   "label": "Cohort 2025-09: MRR retention vs its first month-end",
+   "value": 104.6,
+   "display": "104.6%"
+  },
+  {
+   "id": "F90",
+   "group": "cohorts",
+   "label": "Cohort 2025-10: customers",
+   "value": 23,
+   "display": "23"
+  },
+  {
+   "id": "F91",
+   "group": "cohorts",
+   "label": "Cohort 2025-10: months since start",
+   "value": 5,
+   "display": "5"
+  },
+  {
+   "id": "F92",
+   "group": "cohorts",
+   "label": "Cohort 2025-10: still paying",
+   "value": 20,
+   "display": "20"
+  },
+  {
+   "id": "F93",
+   "group": "cohorts",
+   "label": "Cohort 2025-10: logo retention",
+   "value": 87.0,
+   "display": "87.0%"
+  },
+  {
+   "id": "F94",
+   "group": "cohorts",
+   "label": "Cohort 2025-10: change in logo retention since last month",
+   "value": 0.0,
+   "display": "0.0 pts"
+  },
+  {
+   "id": "F95",
+   "group": "cohorts",
+   "label": "Cohort 2025-10: MRR retention vs its first month-end",
+   "value": 101.7,
+   "display": "101.7%"
+  },
+  {
+   "id": "F96",
+   "group": "cohorts",
+   "label": "Cohort 2025-11: customers",
+   "value": 32,
+   "display": "32"
+  },
+  {
+   "id": "F97",
+   "group": "cohorts",
+   "label": "Cohort 2025-11: months since start",
+   "value": 4,
+   "display": "4"
+  },
+  {
+   "id": "F98",
+   "group": "cohorts",
+   "label": "Cohort 2025-11: still paying",
+   "value": 27,
+   "display": "27"
+  },
+  {
+   "id": "F99",
+   "group": "cohorts",
+   "label": "Cohort 2025-11: logo retention",
+   "value": 84.4,
+   "display": "84.4%"
+  },
+  {
+   "id": "F100",
+   "group": "cohorts",
+   "label": "Cohort 2025-11: change in logo retention since last month",
+   "value": -9.4,
+   "display": "-9.4 pts"
+  },
+  {
+   "id": "F101",
+   "group": "cohorts",
+   "label": "Cohort 2025-11: MRR retention vs its first month-end",
+   "value": 113.6,
+   "display": "113.6%"
+  },
+  {
+   "id": "F102",
+   "group": "cohorts",
+   "label": "Cohort 2025-12: customers",
+   "value": 25,
+   "display": "25"
+  },
+  {
+   "id": "F103",
+   "group": "cohorts",
+   "label": "Cohort 2025-12: months since start",
+   "value": 3,
+   "display": "3"
+  },
+  {
+   "id": "F104",
+   "group": "cohorts",
+   "label": "Cohort 2025-12: still paying",
+   "value": 21,
+   "display": "21"
+  },
+  {
+   "id": "F105",
+   "group": "cohorts",
+   "label": "Cohort 2025-12: logo retention",
+   "value": 84.0,
+   "display": "84.0%"
+  },
+  {
+   "id": "F106",
+   "group": "cohorts",
+   "label": "Cohort 2025-12: change in logo retention since last month",
+   "value": -4.0,
+   "display": "-4.0 pts"
+  },
+  {
+   "id": "F107",
+   "group": "cohorts",
+   "label": "Cohort 2025-12: MRR retention vs its first month-end",
+   "value": 75.0,
+   "display": "75.0%"
+  },
+  {
+   "id": "F108",
+   "group": "cohorts",
+   "label": "Cohort 2026-01: customers",
+   "value": 64,
+   "display": "64"
+  },
+  {
+   "id": "F109",
+   "group": "cohorts",
+   "label": "Cohort 2026-01: months since start",
+   "value": 2,
+   "display": "2"
+  },
+  {
+   "id": "F110",
+   "group": "cohorts",
+   "label": "Cohort 2026-01: still paying",
+   "value": 61,
+   "display": "61"
+  },
+  {
+   "id": "F111",
+   "group": "cohorts",
+   "label": "Cohort 2026-01: logo retention",
+   "value": 95.3,
+   "display": "95.3%"
+  },
+  {
+   "id": "F112",
+   "group": "cohorts",
+   "label": "Cohort 2026-01: change in logo retention since last month",
+   "value": -3.1,
+   "display": "-3.1 pts"
+  },
+  {
+   "id": "F113",
+   "group": "cohorts",
+   "label": "Cohort 2026-01: MRR retention vs its first month-end",
+   "value": 101.3,
+   "display": "101.3%"
+  },
+  {
+   "id": "F114",
+   "group": "cohorts",
+   "label": "Cohort 2026-02: customers",
+   "value": 24,
+   "display": "24"
+  },
+  {
+   "id": "F115",
+   "group": "cohorts",
+   "label": "Cohort 2026-02: months since start",
+   "value": 1,
+   "display": "1"
+  },
+  {
+   "id": "F116",
+   "group": "cohorts",
+   "label": "Cohort 2026-02: still paying",
+   "value": 24,
+   "display": "24"
+  },
+  {
+   "id": "F117",
+   "group": "cohorts",
+   "label": "Cohort 2026-02: logo retention",
+   "value": 100.0,
+   "display": "100.0%"
+  },
+  {
+   "id": "F118",
+   "group": "cohorts",
+   "label": "Cohort 2026-02: change in logo retention since last month",
+   "value": 0.0,
+   "display": "0.0 pts"
+  },
+  {
+   "id": "F119",
+   "group": "cohorts",
+   "label": "Cohort 2026-02: MRR retention vs its first month-end",
+   "value": 98.0,
+   "display": "98.0%"
+  },
+  {
+   "id": "F120",
+   "group": "cohorts",
+   "label": "Cohort 2026-03: customers",
+   "value": 45,
+   "display": "45"
+  },
+  {
+   "id": "F121",
+   "group": "cohorts",
+   "label": "Cohort 2026-03: months since start",
+   "value": 0,
+   "display": "0"
+  },
+  {
+   "id": "F122",
+   "group": "cohorts",
+   "label": "Cohort 2026-03: still paying",
+   "value": 45,
+   "display": "45"
+  },
+  {
+   "id": "F123",
+   "group": "cohorts",
+   "label": "Cohort 2026-03: logo retention",
+   "value": 100.0,
+   "display": "100.0%"
+  },
+  {
+   "id": "F124",
+   "group": "cohorts",
+   "label": "Cohort 2026-03: MRR retention vs its first month-end",
+   "value": 100.0,
+   "display": "100.0%"
+  },
+  {
+   "id": "F125",
+   "group": "top_movers",
+   "label": "Mover 1: customer",
+   "value": "cus_sFuWnD5v45nIUb",
+   "display": "cus_sFuWnD5v45nIUb"
+  },
+  {
+   "id": "F126",
+   "group": "top_movers",
+   "label": "Mover 1: movement",
+   "value": "new",
+   "display": "new"
+  },
+  {
+   "id": "F127",
+   "group": "top_movers",
+   "label": "Mover 1: plan",
+   "value": "Scale",
+   "display": "Scale"
+  },
+  {
+   "id": "F128",
+   "group": "top_movers",
+   "label": "Mover 1: MRR change (size)",
+   "value": 849,
+   "display": "$849"
+  },
+  {
+   "id": "F129",
+   "group": "top_movers",
+   "label": "Mover 2: customer",
+   "value": "cus_4PTyZNDbV0UGIR",
+   "display": "cus_4PTyZNDbV0UGIR"
+  },
+  {
+   "id": "F130",
+   "group": "top_movers",
+   "label": "Mover 2: movement",
+   "value": "churn (involuntary)",
+   "display": "churn (involuntary)"
+  },
+  {
+   "id": "F131",
+   "group": "top_movers",
+   "label": "Mover 2: plan",
+   "value": "Scale",
+   "display": "Scale"
+  },
+  {
+   "id": "F132",
+   "group": "top_movers",
+   "label": "Mover 2: MRR change (size)",
+   "value": 639,
+   "display": "$639"
+  },
+  {
+   "id": "F133",
+   "group": "top_movers",
+   "label": "Mover 3: customer",
+   "value": "cus_29EypZo8tZ6pOz",
+   "display": "cus_29EypZo8tZ6pOz"
+  },
+  {
+   "id": "F134",
+   "group": "top_movers",
+   "label": "Mover 3: movement",
+   "value": "new",
+   "display": "new"
+  },
+  {
+   "id": "F135",
+   "group": "top_movers",
+   "label": "Mover 3: plan",
+   "value": "Scale",
+   "display": "Scale"
+  },
+  {
+   "id": "F136",
+   "group": "top_movers",
+   "label": "Mover 3: MRR change (size)",
+   "value": 609,
+   "display": "$609"
+  },
+  {
+   "id": "F137",
+   "group": "top_movers",
+   "label": "Mover 4: customer",
+   "value": "cus_LB4UUOZm7OeCHU",
+   "display": "cus_LB4UUOZm7OeCHU"
+  },
+  {
+   "id": "F138",
+   "group": "top_movers",
+   "label": "Mover 4: movement",
+   "value": "new",
+   "display": "new"
+  },
+  {
+   "id": "F139",
+   "group": "top_movers",
+   "label": "Mover 4: plan",
+   "value": "Scale",
+   "display": "Scale"
+  },
+  {
+   "id": "F140",
+   "group": "top_movers",
+   "label": "Mover 4: MRR change (size)",
+   "value": 399,
+   "display": "$399"
+  },
+  {
+   "id": "F141",
+   "group": "top_movers",
+   "label": "Mover 5: customer",
+   "value": "cus_DmRpzZnBAMk10B",
+   "display": "cus_DmRpzZnBAMk10B"
+  },
+  {
+   "id": "F142",
+   "group": "top_movers",
+   "label": "Mover 5: movement",
+   "value": "new",
+   "display": "new"
+  },
+  {
+   "id": "F143",
+   "group": "top_movers",
+   "label": "Mover 5: plan",
+   "value": "Scale",
+   "display": "Scale"
+  },
+  {
+   "id": "F144",
+   "group": "top_movers",
+   "label": "Mover 5: MRR change (size)",
+   "value": 333,
+   "display": "$333"
+  },
+  {
+   "id": "F145",
+   "group": "vs_trailing_3m",
+   "label": "Closing MRR: trailing 3-month average",
+   "value": 66284,
+   "display": "$66,284",
+   "display_k": "$66.3k"
+  },
+  {
+   "id": "F146",
+   "group": "vs_trailing_3m",
+   "label": "Closing MRR: change vs trailing average",
+   "value": 6312,
+   "display": "$6,312"
+  },
+  {
+   "id": "F147",
+   "group": "vs_trailing_3m",
+   "label": "Closing MRR: change vs trailing average, percent",
+   "value": 9.5,
+   "display": "9.5%"
+  },
+  {
+   "id": "F148",
+   "group": "vs_trailing_3m",
+   "label": "Closing MRR: times its trailing average",
+   "value": 1.1,
+   "display": "1.1×"
+  },
+  {
+   "id": "F149",
+   "group": "vs_trailing_3m",
+   "label": "New MRR: trailing 3-month average",
+   "value": 4234,
+   "display": "$4,234"
+  },
+  {
+   "id": "F150",
+   "group": "vs_trailing_3m",
+   "label": "New MRR: change vs trailing average",
+   "value": 594,
+   "display": "$594"
+  },
+  {
+   "id": "F151",
+   "group": "vs_trailing_3m",
+   "label": "New MRR: change vs trailing average, percent",
+   "value": 14.0,
+   "display": "14.0%"
+  },
+  {
+   "id": "F152",
+   "group": "vs_trailing_3m",
+   "label": "New MRR: times its trailing average",
+   "value": 1.1,
+   "display": "1.1×"
+  },
+  {
+   "id": "F153",
+   "group": "vs_trailing_3m",
+   "label": "Expansion MRR: trailing 3-month average",
+   "value": 1427,
+   "display": "$1,427"
+  },
+  {
+   "id": "F154",
+   "group": "vs_trailing_3m",
+   "label": "Expansion MRR: change vs trailing average",
+   "value": -508,
+   "display": "-$508"
+  },
+  {
+   "id": "F155",
+   "group": "vs_trailing_3m",
+   "label": "Expansion MRR: change vs trailing average, percent",
+   "value": -35.6,
+   "display": "-35.6%"
+  },
+  {
+   "id": "F156",
+   "group": "vs_trailing_3m",
+   "label": "Expansion MRR: times its trailing average",
+   "value": 0.6,
+   "display": "0.6×"
+  },
+  {
+   "id": "F157",
+   "group": "vs_trailing_3m",
+   "label": "Contraction MRR: trailing 3-month average",
+   "value": 32,
+   "display": "$32"
+  },
+  {
+   "id": "F158",
+   "group": "vs_trailing_3m",
+   "label": "Contraction MRR: change vs trailing average",
+   "value": 1974,
+   "display": "$1,974"
+  },
+  {
+   "id": "F159",
+   "group": "vs_trailing_3m",
+   "label": "Contraction MRR: change vs trailing average, percent",
+   "value": 6257.0,
+   "display": "6257.0%"
+  },
+  {
+   "id": "F160",
+   "group": "vs_trailing_3m",
+   "label": "Contraction MRR: times its trailing average",
+   "value": 63.6,
+   "display": "63.6×"
+  },
+  {
+   "id": "F161",
+   "group": "vs_trailing_3m",
+   "label": "Voluntary churn MRR: trailing 3-month average",
+   "value": 216,
+   "display": "$216"
+  },
+  {
+   "id": "F162",
+   "group": "vs_trailing_3m",
+   "label": "Voluntary churn MRR: change vs trailing average",
+   "value": 59,
+   "display": "$59"
+  },
+  {
+   "id": "F163",
+   "group": "vs_trailing_3m",
+   "label": "Voluntary churn MRR: change vs trailing average, percent",
+   "value": 27.2,
+   "display": "27.2%"
+  },
+  {
+   "id": "F164",
+   "group": "vs_trailing_3m",
+   "label": "Voluntary churn MRR: times its trailing average",
+   "value": 1.3,
+   "display": "1.3×"
+  },
+  {
+   "id": "F165",
+   "group": "vs_trailing_3m",
+   "label": "Involuntary churn MRR: trailing 3-month average",
+   "value": 591,
+   "display": "$591"
+  },
+  {
+   "id": "F166",
+   "group": "vs_trailing_3m",
+   "label": "Involuntary churn MRR: change vs trailing average",
+   "value": 478,
+   "display": "$478"
+  },
+  {
+   "id": "F167",
+   "group": "vs_trailing_3m",
+   "label": "Involuntary churn MRR: change vs trailing average, percent",
+   "value": 80.9,
+   "display": "80.9%"
+  },
+  {
+   "id": "F168",
+   "group": "vs_trailing_3m",
+   "label": "Involuntary churn MRR: times its trailing average",
+   "value": 1.8,
+   "display": "1.8×"
+  },
+  {
+   "id": "F169",
+   "group": "vs_trailing_3m",
+   "label": "Reactivation MRR: trailing 3-month average",
+   "value": 47,
+   "display": "$47"
+  },
+  {
+   "id": "F170",
+   "group": "vs_trailing_3m",
+   "label": "Reactivation MRR: change vs trailing average",
+   "value": -47,
+   "display": "-$47"
+  },
+  {
+   "id": "F171",
+   "group": "vs_trailing_3m",
+   "label": "Reactivation MRR: change vs trailing average, percent",
+   "value": -100.0,
+   "display": "-100.0%"
+  },
+  {
+   "id": "F172",
+   "group": "vs_trailing_3m",
+   "label": "Reactivation MRR: times its trailing average",
+   "value": 0.0,
+   "display": "0.0×"
+  },
+  {
+   "id": "F173",
+   "group": "vs_trailing_3m",
+   "label": "New customers: trailing 3-month average",
+   "value": 37.7,
+   "display": "37.7"
+  },
+  {
+   "id": "F174",
+   "group": "vs_trailing_3m",
+   "label": "New customers: change vs trailing average",
+   "value": 7.3,
+   "display": "7.3"
+  },
+  {
+   "id": "F175",
+   "group": "vs_trailing_3m",
+   "label": "New customers: change vs trailing average, percent",
+   "value": 19.5,
+   "display": "19.5%"
+  },
+  {
+   "id": "F176",
+   "group": "vs_trailing_3m",
+   "label": "New customers: times its trailing average",
+   "value": 1.2,
+   "display": "1.2×"
+  },
+  {
+   "id": "F177",
+   "group": "vs_trailing_3m",
+   "label": "Churned customers: trailing 3-month average",
+   "value": 8,
+   "display": "8"
+  },
+  {
+   "id": "F178",
+   "group": "vs_trailing_3m",
+   "label": "Churned customers: change vs trailing average",
+   "value": 7,
+   "display": "7"
+  },
+  {
+   "id": "F179",
+   "group": "vs_trailing_3m",
+   "label": "Churned customers: change vs trailing average, percent",
+   "value": 87.5,
+   "display": "87.5%"
+  },
+  {
+   "id": "F180",
+   "group": "vs_trailing_3m",
+   "label": "Churned customers: times its trailing average",
+   "value": 1.9,
+   "display": "1.9×"
+  },
+  {
+   "id": "F181",
+   "group": "vs_trailing_3m",
+   "label": "Involuntarily churned customers: trailing 3-month average",
+   "value": 2.7,
+   "display": "2.7"
+  },
+  {
+   "id": "F182",
+   "group": "vs_trailing_3m",
+   "label": "Involuntarily churned customers: change vs trailing average",
+   "value": 5.3,
+   "display": "5.3"
+  },
+  {
+   "id": "F183",
+   "group": "vs_trailing_3m",
+   "label": "Involuntarily churned customers: change vs trailing average, percent",
+   "value": 200.0,
+   "display": "200.0%"
+  },
+  {
+   "id": "F184",
+   "group": "vs_trailing_3m",
+   "label": "Involuntarily churned customers: times its trailing average",
+   "value": 3.0,
+   "display": "3.0×"
+  },
+  {
+   "id": "F185",
+   "group": "vs_trailing_3m",
+   "label": "Customers expanding: trailing 3-month average",
+   "value": 11.3,
+   "display": "11.3"
+  },
+  {
+   "id": "F186",
+   "group": "vs_trailing_3m",
+   "label": "Customers expanding: change vs trailing average",
+   "value": 0.7,
+   "display": "0.7"
+  },
+  {
+   "id": "F187",
+   "group": "vs_trailing_3m",
+   "label": "Customers expanding: change vs trailing average, percent",
+   "value": 5.9,
+   "display": "5.9%"
+  },
+  {
+   "id": "F188",
+   "group": "vs_trailing_3m",
+   "label": "Customers expanding: times its trailing average",
+   "value": 1.1,
+   "display": "1.1×"
+  },
+  {
+   "id": "F189",
+   "group": "vs_trailing_3m",
+   "label": "Logo churn: trailing 3-month average",
+   "value": 2.0,
+   "display": "2.0%"
+  },
+  {
+   "id": "F190",
+   "group": "vs_trailing_3m",
+   "label": "Logo churn: change vs trailing average",
+   "value": 1.3,
+   "display": "1.3 pts"
+  },
+  {
+   "id": "F191",
+   "group": "vs_trailing_3m",
+   "label": "Net MRR churn: trailing 3-month average",
+   "value": -1.0,
+   "display": "-1.0%"
+  },
+  {
+   "id": "F192",
+   "group": "vs_trailing_3m",
+   "label": "Net MRR churn: change vs trailing average",
+   "value": 4.5,
+   "display": "4.5 pts"
+  },
+  {
+   "id": "F193",
+   "group": "vs_trailing_3m",
+   "label": "NRR (12-month): trailing 3-month average",
+   "value": 98.3,
+   "display": "98.3%"
+  },
+  {
+   "id": "F194",
+   "group": "vs_trailing_3m",
+   "label": "NRR (12-month): change vs trailing average",
+   "value": -2.6,
+   "display": "-2.6 pts"
+  },
+  {
+   "id": "F195",
+   "group": "vs_trailing_3m",
+   "label": "GRR (12-month): trailing 3-month average",
+   "value": 78.3,
+   "display": "78.3%"
+  },
+  {
+   "id": "F196",
+   "group": "vs_trailing_3m",
+   "label": "GRR (12-month): change vs trailing average",
+   "value": -0.4,
+   "display": "-0.4 pts"
+  },
+  {
+   "id": "F197",
+   "group": "vs_trailing_3m",
+   "label": "Net revenue: trailing 3-month average",
+   "value": 62503,
+   "display": "$62,503",
+   "display_k": "$62.5k"
+  },
+  {
+   "id": "F198",
+   "group": "vs_trailing_3m",
+   "label": "Net revenue: change vs trailing average",
+   "value": 12649,
+   "display": "$12,649",
+   "display_k": "$12.6k"
+  },
+  {
+   "id": "F199",
+   "group": "vs_trailing_3m",
+   "label": "Net revenue: change vs trailing average, percent",
+   "value": 20.2,
+   "display": "20.2%"
+  },
+  {
+   "id": "F200",
+   "group": "vs_trailing_3m",
+   "label": "Net revenue: times its trailing average",
+   "value": 1.2,
+   "display": "1.2×"
+  },
+  {
+   "id": "F201",
+   "group": "vs_trailing_3m",
+   "label": "Billings: trailing 3-month average",
+   "value": 78681,
+   "display": "$78,681",
+   "display_k": "$78.7k"
+  },
+  {
+   "id": "F202",
+   "group": "vs_trailing_3m",
+   "label": "Billings: change vs trailing average",
+   "value": 108592,
+   "display": "$108,592",
+   "display_k": "$108.6k"
+  },
+  {
+   "id": "F203",
+   "group": "vs_trailing_3m",
+   "label": "Billings: change vs trailing average, percent",
+   "value": 138.0,
+   "display": "138.0%"
+  },
+  {
+   "id": "F204",
+   "group": "vs_trailing_3m",
+   "label": "Billings: times its trailing average",
+   "value": 2.4,
+   "display": "2.4×"
+  },
+  {
+   "id": "F205",
+   "group": "vs_trailing_3m",
+   "label": "Net cash collected: trailing 3-month average",
+   "value": 74073,
+   "display": "$74,073",
+   "display_k": "$74.1k"
+  },
+  {
+   "id": "F206",
+   "group": "vs_trailing_3m",
+   "label": "Net cash collected: change vs trailing average",
+   "value": 113739,
+   "display": "$113,739",
+   "display_k": "$113.7k"
+  },
+  {
+   "id": "F207",
+   "group": "vs_trailing_3m",
+   "label": "Net cash collected: change vs trailing average, percent",
+   "value": 153.5,
+   "display": "153.5%"
+  },
+  {
+   "id": "F208",
+   "group": "vs_trailing_3m",
+   "label": "Net cash collected: times its trailing average",
+   "value": 2.5,
+   "display": "2.5×"
+  },
+  {
+   "id": "F209",
+   "group": "vs_trailing_3m",
+   "label": "Refunds paid: trailing 3-month average",
+   "value": 137,
+   "display": "$137"
+  },
+  {
+   "id": "F210",
+   "group": "vs_trailing_3m",
+   "label": "Refunds paid: change vs trailing average",
+   "value": -88,
+   "display": "-$88"
+  },
+  {
+   "id": "F211",
+   "group": "vs_trailing_3m",
+   "label": "Refunds paid: change vs trailing average, percent",
+   "value": -63.9,
+   "display": "-63.9%"
+  },
+  {
+   "id": "F212",
+   "group": "vs_trailing_3m",
+   "label": "Refunds paid: times its trailing average",
+   "value": 0.4,
+   "display": "0.4×"
+  },
+  {
+   "id": "F213",
+   "group": "vs_trailing_3m",
+   "label": "Bad-debt expense: trailing 3-month average",
+   "value": 283,
+   "display": "$283"
+  },
+  {
+   "id": "F214",
+   "group": "vs_trailing_3m",
+   "label": "Bad-debt expense: change vs trailing average",
+   "value": 233,
+   "display": "$233"
+  },
+  {
+   "id": "F215",
+   "group": "vs_trailing_3m",
+   "label": "Bad-debt expense: change vs trailing average, percent",
+   "value": 82.2,
+   "display": "82.2%"
+  },
+  {
+   "id": "F216",
+   "group": "vs_trailing_3m",
+   "label": "Bad-debt expense: times its trailing average",
+   "value": 1.8,
+   "display": "1.8×"
+  },
+  {
+   "id": "F217",
+   "group": "vs_trailing_3m",
+   "label": "Customers entering dunning: trailing 3-month average",
+   "value": 15.3,
+   "display": "15.3"
+  },
+  {
+   "id": "F218",
+   "group": "vs_trailing_3m",
+   "label": "Customers entering dunning: change vs trailing average",
+   "value": -3.3,
+   "display": "-3.3"
+  },
+  {
+   "id": "F219",
+   "group": "vs_trailing_3m",
+   "label": "Customers entering dunning: change vs trailing average, percent",
+   "value": -21.7,
+   "display": "-21.7%"
+  },
+  {
+   "id": "F220",
+   "group": "vs_trailing_3m",
+   "label": "Customers entering dunning: times its trailing average",
+   "value": 0.8,
+   "display": "0.8×"
+  },
+  {
+   "id": "F221",
+   "group": "vs_trailing_3m",
+   "label": "Customers in dunning at month-end: trailing 3-month average",
+   "value": 4.3,
+   "display": "4.3"
+  },
+  {
+   "id": "F222",
+   "group": "vs_trailing_3m",
+   "label": "Customers in dunning at month-end: change vs trailing average",
+   "value": -4.3,
+   "display": "-4.3"
+  },
+  {
+   "id": "F223",
+   "group": "vs_trailing_3m",
+   "label": "Customers in dunning at month-end: change vs trailing average, percent",
+   "value": -100.0,
+   "display": "-100.0%"
+  },
+  {
+   "id": "F224",
+   "group": "vs_trailing_3m",
+   "label": "Customers in dunning at month-end: times its trailing average",
+   "value": 0.0,
+   "display": "0.0×"
+  },
+  {
+   "id": "F225",
+   "group": "vs_trailing_3m",
+   "label": "At-risk MRR (customers in dunning): trailing 3-month average",
+   "value": 882,
+   "display": "$882"
+  },
+  {
+   "id": "F226",
+   "group": "vs_trailing_3m",
+   "label": "At-risk MRR (customers in dunning): change vs trailing average",
+   "value": -882,
+   "display": "-$882"
+  },
+  {
+   "id": "F227",
+   "group": "vs_trailing_3m",
+   "label": "At-risk MRR (customers in dunning): change vs trailing average, percent",
+   "value": -100.0,
+   "display": "-100.0%"
+  },
+  {
+   "id": "F228",
+   "group": "vs_trailing_3m",
+   "label": "At-risk MRR (customers in dunning): times its trailing average",
+   "value": 0.0,
+   "display": "0.0×"
+  }
+ ]
+}

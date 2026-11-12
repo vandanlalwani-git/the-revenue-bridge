@@ -114,11 +114,12 @@ Revenue recognition, changed from v1:
 
 ## 5. AI step: notes for all 18 months
 
-1. **Facts.** `build_facts.py` writes `notes/facts/YYYY-MM.json` for every reporting month. Each figure gets an ID ([F1], [F2] …): bridge components, drivers, churn by plan, type and cohort, NRR and GRR, at-risk MRR, the reconciliation items, the **top 5 movers** and the **delta against the trailing 3-month average** for each headline metric. Refunds are **split into delivered (earned, reduces revenue) and unearned (reduces the contract liability)**, and the **largest single refund** is listed with its amount, portion and customer ID, so the note can attribute refunds correctly. Facts carry no event labels, only metrics.
+1. **Facts.** `build_facts.py` writes `notes/facts/YYYY-MM.json` for every reporting month. Each figure gets an ID ([F1], [F2] …): bridge components, drivers, churn by plan, type and cohort, NRR and GRR, at-risk MRR, the reconciliation items, the **top 5 movers**, and for each headline metric its **delta against the trailing 3-month average** and its **ratio to that average** ("2.4×"). Refunds are **split into delivered (earned, reduces revenue) and unearned (reduces the contract liability)**, and the **largest single refund** is listed with its amount, portion and customer ID, so the note can attribute refunds correctly. Facts carry no event labels, only metrics.
 2. **Prompt** (`notes/prompt.md`):
    - 120–200 words in a founder's voice.
    - Every number cites a fact ID.
    - **Every number is written as digits.** No word-numbers: no "doubled", "half", "three", "twice" or "a quarter of".
+   - The size of a change is given by a pre-computed ratio fact, written as "2.4×" or "2.4 times". This was Vandan's decision on 2026-11-13, in place of words like "almost doubled", which can't be checked against a fact.
    - No causes beyond what the facts show.
    - Say plainly when a month is quiet.
 3. **Freeze protocol.** Before any evaluation result is viewed:
@@ -138,7 +139,7 @@ Revenue recognition, changed from v1:
    - **Detection, metrics layer:** each expected signal, checked by threshold in SQL.
    - **Detection, narrative layer:** does the note for that month mention the signal? This is checked with keyword and fact-ID rules, and a manual review is recorded.
    - **Quiet months, including E8 and all unplanted months:** anomaly language ("spike", "surge", "sharp", "concentrated", "unusual"…) has to cite a fact whose trailing-average delta crosses the threshold. Otherwise it counts as an unsupported claim.
-6. **Write-up disclosures (required, drafted in `docs/writeup.md`):** the answer key was finalised after data generation and before any note was written, with each adjustment listed; the prompt was frozen before evaluation. Also: the facts file **pre-computes the top movers and the trailing-average deltas**. The AI's job is to select, rank and narrate figures already computed. It doesn't discover anomalies from raw data.
+6. **Write-up disclosures (required, drafted in `docs/writeup.md`):** the answer key was finalised after data generation and before any note was written, with each adjustment listed; the prompt was frozen before evaluation. Also: the facts file **pre-computes the top movers, the trailing-average deltas and the ratios to the trailing average**. The AI's job is to select, rank and narrate figures already computed. It doesn't discover anomalies from raw data.
 
 ---
 
@@ -165,7 +166,7 @@ the-revenue-bridge/
 │  └─ 60_reconciliation.sql # R1-R3 and the rollforwards, each with an unexplained line
 ├─ pipeline/run.py        # builds sql/*.sql, exports data/marts/*.parquet
 ├─ pipeline/display.py    # the only display-rounding code (definitions §7)
-├─ notes/  prompt.md, FREEZE.json, build_facts.py, write_notes.py, evaluate.py, facts/, output/
+├─ notes/  prompt.md, FREEZE.json, build_facts.py, write_notes.py, checks.py, lint.py, freeze.py, evaluate.py, facts/, output/
 ├─ site/   build_site.py, template.html, index.html
 ├─ .github/workflows/pages.yml   # deploys site/ only
 ├─ tests/

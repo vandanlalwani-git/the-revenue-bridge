@@ -306,6 +306,7 @@ Bad-debt expense (P&L) appears beside R3. It is not part of the cash bridge.
 **7.2 Display units.**
 - Money on the page and in notes is shown in whole dollars, or as $k to 1 decimal where a fact provides that form.
 - Percentages are shown to 1 decimal place. Counts are exact.
+- Ratios (a metric divided by its trailing 3-month average) are shown to 1 decimal place with ×, such as 2.4×, and may be written in a note as "2.4 times".
 - Rounding is half away from zero.
 
 **7.3 Displayed bridges add up.**
