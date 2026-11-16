@@ -186,7 +186,7 @@ the-revenue-bridge/
 | 3 | Staging, month-end MRR, movements and drivers, display rounding | **✅ Gate 2 signed off: bridge ties all 30 months; rebuild = truth for all 7,257 customer-months** |
 | 4 | Retention (logo churn, MRR churn, NRR, GRR, cohorts), revenue recognition by the second, refund split | ✅ Done 2026-10-29: revenue matches an independent Python recomputation every month; D4 and E5 checks pass |
 | 5 | Daily MRR snapshots for average MRR (R1), ledger (contract liability, receivables, IFRS 9 provision matrix), cash, three reconciliations | **✅ Gate 3 signed off 2026-11-12: R1–R3 and all rollforwards show $0.00 unexplained in all 30 months; adjustment 6 applied; provision matrix moved to four aged buckets. Data and answer key frozen.** |
-| 6 | Facts builder. Prompt written, format-linted on the dev seed, frozen. 18 notes via `claude -p`. Then the evaluator | Scorecard produced |
+| 6 | Facts builder. Prompt written, format-linted on the dev seed, frozen. 18 notes via `claude -p`. Then the evaluator | ✅ Scorecard produced 2026-11-13 (`notes/scorecard.md`): 510/511 numbers grounded, 0 hallucinations, 19/20 primary signals caught; manual review confirmed by Vandan |
 | 7 | Static site | Page renders locally |
 | 8 | Stripe test-clock check, GitHub Actions Pages workflow, polish | Same SQL runs on the Stripe export |
 | 9 | Write-up, 2-min video, go live | Live URL |

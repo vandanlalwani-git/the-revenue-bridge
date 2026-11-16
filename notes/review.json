@@ -1,0 +1,14 @@
+{
+ "reviewer": "Claude, first read on 2026-11-13; confirmed by Vandan on 2026-11-16",
+ "method": "Read all 18 notes against their facts files. Checked every stated cause or attribution against the cited facts, and every customer ID against the month's facts.",
+ "months": {},
+ "comments": [
+  "Unsupported causes (hallucination type b): none found. Every attribution (a plan, driver, churn type, cohort or customer) is shown by a cited fact, and all customer IDs named appear in that month's facts.",
+  "E2, 2025-11, 'gross MRR churn far above logo churn': scored as missed by the rule, because the note cites neither the gross MRR churn rate nor both rates together. In substance it makes the point: churned MRR at 7.2× its trailing average against churned customers at 0.4×, with logo churn at 2.4%. The automated result stands.",
+  "E6, 2026-04: the rules score both signals as caught, but the note only reports the $1,899 refund and its customer. It never says the refund was for delivered service, that it reduced net revenue, or that MRR was unaffected. Read strictly, the catch is weak.",
+  "E4 supporting signals missed: the February note does not mention bad-debt expense, and the March note does not mention at-risk MRR returning to baseline.",
+  "2025-02, word-number 'One': used as an idiom ('One thing to watch'), not a quantity. Still counted under the rule.",
+  "2025-12, uncited '12': part of 'Over 12 months, NRR', a metric name the exemption did not cover because it is not written '12-month'. Still counted under the rule.",
+  "E8, 2026-06, control month: the note flags at-risk MRR at 5.9× its trailing average. That is an accurate mention of an unplanted movement (one Scale customer in dunning) and is supported by a cited fact, so it is not penalised."
+ ]
+}
