@@ -4,7 +4,7 @@ A SaaS finance pack built on Stripe-shaped test data. SQL computes every number:
 
 **Most Stripe dashboards stop at MRR. This one ties MRR to revenue and to cash, every month, to the cent.**
 
-- **Live page:** see the repository's GitHub Pages link
+- **Live page:** https://vandanlalwani-git.github.io/the-revenue-bridge/
 - **Write-up:** [docs/writeup.md](docs/writeup.md)
 - **Metric definitions (every judgement call):** [docs/metric_definitions.md](docs/metric_definitions.md)
 

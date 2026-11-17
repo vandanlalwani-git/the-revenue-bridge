@@ -416,7 +416,7 @@ def links() -> dict:
     cfg = yaml.safe_load((SITE / "config.yaml").read_text()) or {}
     repo = cfg.get("repo_url")
     return {"repo": repo, "writeup": f"{repo}/blob/main/docs/writeup.md" if repo else None,
-            "notes": f"{repo}/tree/main/notes/output" if repo else None, "video": cfg.get("video_url")}
+            "notes": f"{repo}/tree/main/notes/v2/output" if repo else None, "video": cfg.get("video_url")}
 
 
 def main(out: Path | None = None) -> Path:
