@@ -12,19 +12,23 @@ import sys
 from pathlib import Path
 
 from notes.checks import format_problems
+from notes.sets import SETS, paths
 
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--facts", type=Path, required=True)
     ap.add_argument("--notes", type=Path, required=True)
+    ap.add_argument("--set", default="v1", choices=sorted(SETS))
     args = ap.parse_args(argv)
-    if (args.notes.resolve() == (Path(__file__).parent / "output").resolve()):
+    rules = paths(args.set)
+    if any(args.notes.resolve() == paths(s)["output"].resolve() for s in SETS):
         sys.exit("The lint is for dev-seed notes only.")
     failed = 0
     for note_path in sorted(args.notes.glob("*.md")):
         facts = json.loads((args.facts / f"{note_path.stem}.json").read_text())
-        problems = format_problems(note_path.read_text(), {f["id"] for f in facts["facts"]})
+        problems = format_problems(note_path.read_text(), {f["id"] for f in facts["facts"]},
+                                   rules["min_words"], rules["max_words"], rules["bullets"], rules["exempt_re"])
         failed += bool(problems)
         print(f"{note_path.stem}: {'ok' if not problems else '; '.join(problems)}")
     sys.exit(1 if failed else 0)

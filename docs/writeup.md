@@ -6,6 +6,20 @@
 
 **Test data.** All data is synthetic. A seeded generator writes it in Stripe's object model (seed 20260129). Nothing comes from a real company.
 
+**Stripe check.** To show the SQL is not fitted to the generator, it was also run unchanged on data that Stripe itself produced.
+- **The run.** In a Stripe test-mode account, 6 customers were played through January–April 2026 on 2 test clocks. The run covered a trial, an annual prepayment, an upgrade, extra seats, a 20% coupon, a refund, a card failure that recovered, and a card failure that Stripe's retries gave up on.
+- **The export.** Stripe's objects were exported into the same raw tables.
+- **The result.** Every reconciliation and rollforward ties to $0.00, and MRR at each month-end matches the scenario worked out by hand.
+- **What Stripe did.** It cancelled the failing subscription itself, with reason "payment_failed", so it counts as involuntary churn. It left the invoice open, and the run then wrote it off as a finance team would.
+- **Converter fix 1: the coupon.** Stripe records a subscription coupon on the invoice, so the converter reads it from the line's discount amounts.
+- **Converter fix 2: the timestamps.** Test clocks put invoices and subscriptions in simulated time but stamp charges and refunds with real time. The converter places each payment back on the simulated timeline:
+  - a successful charge at its invoice's paid time;
+  - a refund at the clock time of the step that issued it;
+  - a failed retry within the clock advance that produced it.
+
+  The run stops at every month-end, so each payment's month is exact. A live account does not need this step.
+- **What it does not prove.** It covers 6 customers and 4 months. The 30 months on the page are still the synthetic data. The export pins Stripe's API version to 2024-06-20, the shape `generator/schema.py` follows; newer versions moved some fields (for example, the subscription on an invoice now sits under `parent`), so a converter for them would map those fields first.
+
 **Answer key timing.** The expected signals in the answer key were finalised **after the data was generated and before any note was written**. Adjustments 1–5 were made on 2026-10-29 and adjustment 6 on 2026-11-12. All of them came after the first generation of the test seed and before any note was written. They are listed below so the reader can judge them:
 
 1. **E3 cliff rate raised from 0.35 to 0.45.** On first generation, the January 2026 promo cohort's logo-retention drop from M2 to M3 was 19.4 points, against a 20-point check. Non-promo customers in the same cohort diluted it. The planted event was made stronger and the threshold was left unchanged.
@@ -46,6 +60,13 @@
    Three checks were affected by the reshuffle and were aligned with the roles the answer key already gives. The answer key itself was not changed. E1 is checked by number of customers expanding, not dollars. E4's at-risk MRR, which is supporting evidence, must be above 2× its trailing level rather than 3×. E8, the control month, is checked on counts of customers in dunning and entering dunning, not on at-risk MRR. Data mining was avoided: the data was not regenerated again to make the checks pass.
 
 **Prompt freeze.** The note prompt was frozen before any evaluation result was viewed. `notes/FREEZE.json` records the prompt's SHA-256, the model and the CLI version. Each note records the hash it was generated with, and the evaluator refuses to run on a mismatch. Before the freeze, the only check run was a format lint (length, citation syntax, digits only) on a separate development seed. All 18 dev-seed notes passed it with the prompt unchanged. The checker itself was corrected once, so it no longer treats the metric names "12-month" and "3-month" as uncited figures.
+
+**Second note format (v2).** After reviewing the page on 2026-11-17, Vandan asked for a founder's-update format: a headline, then bullets that each end with a "What it means" line, with customers named instead of shown as IDs. A new prompt (`notes/v2/prompt.md`) was written for that format. It was written after v1's results had been seen, so it is disclosed as such:
+- It changes format only. Every v1 rule is kept: digits only, a fact cited after every number, no arithmetic, no causes the facts don't show. It adds one rule, that "What it means" may explain significance using only the facts and standard SaaS and accounting meaning. It is not tuned to the signals v1 missed.
+- v2 facts are v1's facts with customer names in place of IDs. The names come from the synthetic customers table.
+- Before v2's freeze, the only checks were format lints on the dev seed, run four times. The prompt was tightened between runs for length, a word-number, and uncited benchmark figures such as "100%". The checker was also extended, for v2 only, to treat "12 months" as a time window rather than a figure. v1's scorecard is still produced with v1's original checker, and it reproduces exactly.
+- The note-writer CLI was updated by the desktop app between the two runs: v1 was written with 2.1.321, v2 with 2.1.325. Each freeze records its own version.
+- Both sets are scored by the same evaluator against the same answer key, and both results are published.
 
 **What the AI does and does not do.** The facts file **pre-computes the top movers, the deltas against the trailing 3-month average and the ratio to that average ("2.4×")** for every headline metric. The AI's job is to select, rank and narrate figures already computed. It does not discover anomalies in raw data.
 

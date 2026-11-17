@@ -1,9 +1,10 @@
 # The only place the note-writer CLI and model are pinned.
 # write_notes.py checks `<cli_path> --version` against expected_cli_version and stops on a mismatch.
 # The desktop app updates its bundled CLI, so a version change is a deliberate edit here, not a silent drift.
-# Re-pinned 2026-11-13 from 2.1.308 (removed by an app update), approved by Vandan.
-cli_path: "~/Library/Application Support/Claude/claude-code/2.1.321/ddbdf2b334e1/claude.app/Contents/MacOS/claude"
-expected_cli_version: "2.1.321"
+# Re-pinned 2026-11-13 from 2.1.308 (removed by an app update), approved by Vandan. v1 notes were written with 2.1.321.
+# Re-pinned 2026-11-17 to 2.1.325 after the next app update; v2 notes are written with it (recorded in notes/v2/FREEZE.json).
+cli_path: "~/Library/Application Support/Claude/claude-code/2.1.325/485fdac4332e/claude.app/Contents/MacOS/claude"
+expected_cli_version: "2.1.325"
 model: claude-opus-5-5
 # write_notes.py runs the CLI from an empty temp folder with a clean environment (HOME, PATH and the
 # username only), so it uses the CLI's own login and nothing from the session that launched it.

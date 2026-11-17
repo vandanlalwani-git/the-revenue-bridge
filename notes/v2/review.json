@@ -1,0 +1,16 @@
+{
+ "reviewer": "Claude, first read on 2026-11-17; awaiting Vandan's confirmation",
+ "method": "Read all 18 v2 updates against their facts files. Checked every stated cause and every 'What it means' line against the cited facts, and every customer name against the month's facts.",
+ "months": {},
+ "comments": [
+  "Unsupported causes (hallucination type b): none found. The 4 sentences the evaluator flagged as causal are all shown by cited facts: refund splits in 2025-04 and 2026-01, and the interval-switch driver in 2025-05 and 2026-03.",
+  "Every customer named appears in that month's facts, with the plan and movement the facts give.",
+  "E6, 2026-04: v2 states that the refunds were for service already delivered and came off net revenue, which is correct. This is stronger than v1, which only reported the refund.",
+  "E2, 2025-11, 'gross MRR churn far above logo churn': missed by the rule again. The update names the departing Scale customers and says losing larger accounts removes significant revenue even when few customers leave, but it cites neither the gross MRR churn rate nor logo churn. The automated result stands.",
+  "E4 supporting signals missed as in v1: the February update does not mention bad-debt expense, and the March update does not say at-risk MRR returned to baseline. It does say no customers remained in dunning.",
+  "Wording, not a hallucination: 2025-06 calls a monthly-to-annual interval switch a 'downgrade'. It is a contraction in MRR, not a downgrade of plan.",
+  "Slight overstatement: 2025-03 says 'nothing was lost between billing and cash'. That rests on $0 refunds and $0 bad-debt expense only.",
+  "2025-10 cites 2 facts after a single figure ('1.2 times [F197] [F205]'). Both facts carry that value, so it is grounded, but it breaks the one-ID-per-number rule.",
+  "E8, 2026-06, control month: the update flags at-risk MRR at 5.9× its trailing average. That is an accurate mention of an unplanted movement, supported by a cited fact, so it is not penalised."
+ ]
+}

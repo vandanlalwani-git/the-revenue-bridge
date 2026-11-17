@@ -17,6 +17,7 @@ import json
 from fractions import Fraction
 from pathlib import Path
 
+from notes.sets import SETS, paths
 from pipeline import display
 from pipeline.run import build, connect
 
@@ -86,6 +87,7 @@ def load(con):
     by_month = lambda sql: {r["month"]: r for r in rows(sql)}
     months = [m for (m,) in q("SELECT month FROM calendar ORDER BY month")]
     data = {
+        "names": dict(q("SELECT id, name FROM raw.customers")),
         "months": months,
         "bridge": by_month("SELECT * FROM mrr_bridge"),
         "retention": by_month("SELECT * FROM retention_month"),
@@ -179,8 +181,9 @@ def shown(kind: str, value) -> dict | None:
     return {"value": float(display.percent(value, 100)), "display": f"{display.percent(value, 100)}%"}
 
 
-def build_month(data, m: str) -> dict:
+def build_month(data, m: str, customer_label: str = "id") -> dict:
     f = Facts(m)
+    who = (lambda c: c) if customer_label == "id" else (lambda c: data["names"][c])
     i = data["months"].index(m)
     b, r, rv, rc, e, d = (data[k][m] for k in ("bridge", "retention", "revenue", "recon", "ecl", "dunning"))
     mrr = lambda arr: display.arr_cents_to_mrr_dollars(arr)
@@ -259,7 +262,7 @@ def build_month(data, m: str) -> dict:
               money(usd(sum(x["unearned_cents"] for x in refunds))))
         big = refunds[0]
         f.add("refunds", "Largest single refund", money(usd(big["amount_cents"])))
-        f.add("refunds", "Largest single refund: customer", text(big["customer"]))
+        f.add("refunds", "Largest single refund: customer", text(who(big["customer"])))
         f.add("refunds", "Largest single refund: delivered-service part", money(usd(big["delivered_cents"])))
         f.add("refunds", "Largest single refund: not-yet-delivered part", money(usd(big["unearned_cents"])))
 
@@ -308,7 +311,7 @@ def build_month(data, m: str) -> dict:
     # Top 5 movers by size of MRR change.
     for rank, row in enumerate([x for x in data["movers"] if x["month"] == m][:5], start=1):
         move = row["movement"] + (f" ({row['churn_type']})" if row["churn_type"] else "")
-        f.add("top_movers", f"Mover {rank}: customer", text(row["customer"]))
+        f.add("top_movers", f"Mover {rank}: customer", text(who(row["customer"])))
         f.add("top_movers", f"Mover {rank}: movement", text(move))
         f.add("top_movers", f"Mover {rank}: plan", text(row["plan"] or "unknown"))
         if row["driver"]:
@@ -344,15 +347,19 @@ def build_month(data, m: str) -> dict:
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--data", type=Path, default=ROOT / "data")
-    ap.add_argument("--out", type=Path, default=ROOT / "notes" / "facts")
+    ap.add_argument("--set", default="v1", choices=sorted(SETS), help="v1 names customers by ID, v2 by name")
+    ap.add_argument("--out", type=Path)
     args = ap.parse_args(argv)
+    P = paths(args.set)
+    args.out = args.out or P["facts"]
     con = connect(args.data)
     build(con)
     data = load(con)
     args.out.mkdir(parents=True, exist_ok=True)
     reporting = [m for m in data["months"] if m >= FIRST_REPORTING_MONTH]
     for m in reporting:
-        (args.out / f"{m}.json").write_text(json.dumps(build_month(data, m), indent=1, ensure_ascii=False) + "\n")
+        month_facts = build_month(data, m, P["customer_label"])
+        (args.out / f"{m}.json").write_text(json.dumps(month_facts, indent=1, ensure_ascii=False) + "\n")
     print(f"wrote {len(reporting)} facts files to {args.out}")
 
 

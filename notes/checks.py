@@ -13,8 +13,10 @@ CITATION = re.compile(r"\[(F\d+)\]")
 # A number as a note may write it: $72,596  $72.6k  3.3%  1.3 pts  2.4×  2.4 times  45  -$549
 NUMBER = re.compile(r"(?<![\w.\-])-?\$?\d[\d,]*(?:\.\d+)?(?:k\b|%|×|\s?pts\b|\s?times\b)?")
 # Not numbers for these purposes: dates and cohort labels (2026-03, 2026), customer IDs, and the
-# metric names the facts themselves use ("12-month NRR", "trailing 3-month average").
-EXEMPT = re.compile(r"\b20\d\d(?:-\d\d)?\b|\bcus_\w+|\[F\d+\]|\b(?:3|12)-month\b")
+# metric windows the facts themselves use ("12-month NRR", "trailing 3-month average", "12 months ago").
+# v1 was scored with the narrower exemption ("12-month" only); v2 also exempts "12 months" (added before v2's freeze).
+EXEMPT_V1 = re.compile(r"\b20\d\d(?:-\d\d)?\b|\bcus_\w+|\[F\d+\]|\b(?:3|12)-month\b")
+EXEMPT = re.compile(r"\b20\d\d(?:-\d\d)?\b|\bcus_\w+|\[F\d+\]|\b(?:3|12)[- ]months?\b")
 
 WORD_NUMBERS = re.compile(
     r"\b(zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|"
@@ -29,9 +31,9 @@ def words(note: str) -> int:
     return len(re.findall(r"\b[\w'’$%.,×-]+\b", CITATION.sub("", note)))
 
 
-def numbers_with_citations(note: str) -> list[tuple[str, str | None]]:
+def numbers_with_citations(note: str, exempt: re.Pattern = EXEMPT_V1) -> list[tuple[str, str | None]]:
     """Each number in the note with the fact ID cited after it (within a few words), or None."""
-    masked = EXEMPT.sub(lambda m: m.group(0) if m.group(0).startswith("[F") else " " * len(m.group(0)), note)
+    masked = exempt.sub(lambda m: m.group(0) if m.group(0).startswith("[F") else " " * len(m.group(0)), note)
     found = [(m.start(), m.end(), m.group(0).strip()) for m in NUMBER.finditer(masked)]
     out = []
     for i, (start, end, token) in enumerate(found):
@@ -50,19 +52,36 @@ def word_numbers(note: str) -> list[str]:
     return [m.group(0) for m in WORD_NUMBERS.finditer(cleaned)]
 
 
-def format_problems(note: str, fact_ids: set[str]) -> list[str]:
+def format_problems(note: str, fact_ids: set[str], min_words: int = MIN_WORDS, max_words: int = MAX_WORDS,
+                    bullets: bool = False, exempt: re.Pattern = EXEMPT_V1) -> list[str]:
+    """v1 notes are paragraphs. v2 notes are a 'Headline:' line, then 4-6 '- ' bullets, each with 'What it means:'."""
     problems = []
     n = words(note)
-    if not MIN_WORDS <= n <= MAX_WORDS:
-        problems.append(f"length {n} words, outside {MIN_WORDS}-{MAX_WORDS}")
+    if not min_words <= n <= max_words:
+        problems.append(f"length {n} words, outside {min_words}-{max_words}")
     for fid in CITATION.findall(note):
         if fid not in fact_ids:
             problems.append(f"cites {fid}, which is not in the facts file")
-    for token, fid in numbers_with_citations(note):
+    for token, fid in numbers_with_citations(note, exempt):
         if fid is None:
             problems.append(f"number {token!r} has no citation after it")
     for w in word_numbers(note):
         problems.append(f"word-number {w!r}")
-    if re.search(r"^\s*([-*•]|#)", note, re.M):
-        problems.append("uses bullets or headings")
+    if not bullets:
+        if re.search(r"^\s*([-*•]|#)", note, re.M):
+            problems.append("uses bullets or headings")
+        return problems
+    lines = [l.strip() for l in note.strip().splitlines() if l.strip()]
+    if not lines or not lines[0].startswith("Headline: "):
+        problems.append("does not start with 'Headline: '")
+    items = [l for l in lines[1:] if l.startswith("- ")]
+    if len(items) != len(lines) - 1:
+        problems.append("has lines that are neither the headline nor a bullet")
+    if not 4 <= len(items) <= 6:
+        problems.append(f"{len(items)} bullets, not 4-6")
+    for item in items:
+        if "What it means:" not in item:
+            problems.append(f"bullet without 'What it means:': {item[:40]!r}")
+    if re.search(r"^\s*#", note, re.M):
+        problems.append("uses headings")
     return problems

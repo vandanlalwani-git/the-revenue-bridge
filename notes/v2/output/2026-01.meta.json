@@ -1,0 +1,15 @@
+{
+ "month": "2026-01",
+ "prompt_sha256": "977e1bfecbfe37285949d8317b1ba315fcecc2f12a433d50e4dd5fca12baf1a8",
+ "facts_sha256": "220d4aaf6e897fa09bf3a45a8340a22bccb3a7ff08f9418a1f9322122f41f604",
+ "cli_version": "2.1.325",
+ "model_requested": "claude-opus-5-5",
+ "models_reported": [
+  "claude-opus-5-5"
+ ],
+ "num_turns": 1,
+ "seconds": 55.6,
+ "dev_seed": false,
+ "set": "v2",
+ "generated_at": "2026-11-17T08:03:39+00:00"
+}

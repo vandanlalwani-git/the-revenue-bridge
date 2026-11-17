@@ -1,0 +1,298 @@
+{
+ "stripe_api_version": "2024-06-20",
+ "run": "revenue-bridge-20261117T211911Z",
+ "clock_start": 1767225600,
+ "clock_end": 1777550400,
+ "steps": [
+  [
+   "2026-01-01 00:00",
+   "subscribe",
+   "northwind"
+  ],
+  [
+   "2026-01-01 00:00",
+   "subscribe",
+   "bluefin"
+  ],
+  [
+   "2026-01-01 00:00",
+   "subscribe",
+   "kestrel"
+  ],
+  [
+   "2026-01-01 00:00",
+   "subscribe",
+   "orchid"
+  ],
+  [
+   "2026-01-01 00:00",
+   "subscribe",
+   "pinecrest"
+  ],
+  [
+   "2026-01-10 09:00",
+   "subscribe",
+   "quill"
+  ],
+  [
+   "2026-01-20 12:00",
+   "card_fails",
+   "pinecrest"
+  ],
+  [
+   "2026-02-05 12:00",
+   "card_fails",
+   "quill"
+  ],
+  [
+   "2026-02-12 15:00",
+   "upgrade",
+   "northwind"
+  ],
+  [
+   "2026-02-13 10:00",
+   "card_fixed",
+   "quill"
+  ],
+  [
+   "2026-02-20 12:00",
+   "refund",
+   "bluefin"
+  ],
+  [
+   "2026-03-05 11:00",
+   "seats",
+   "orchid"
+  ],
+  [
+   "2026-03-10 12:00",
+   "cancel_at_period_end",
+   "kestrel"
+  ],
+  [
+   "2026-03-20 12:00",
+   "write_off_if_open",
+   "pinecrest"
+  ]
+ ],
+ "timeline": [
+  {
+   "kind": "action",
+   "real_from": 1794950358,
+   "real_to": 1794950364,
+   "clock_from": 1767225600,
+   "clock_to": 1767225600
+  },
+  {
+   "kind": "action",
+   "real_from": 1794950363,
+   "real_to": 1794950368,
+   "clock_from": 1767225600,
+   "clock_to": 1767225600
+  },
+  {
+   "kind": "action",
+   "real_from": 1794950367,
+   "real_to": 1794950372,
+   "clock_from": 1767225600,
+   "clock_to": 1767225600
+  },
+  {
+   "kind": "action",
+   "real_from": 1794950371,
+   "real_to": 1794950377,
+   "clock_from": 1767225600,
+   "clock_to": 1767225600
+  },
+  {
+   "kind": "action",
+   "real_from": 1794950376,
+   "real_to": 1794950382,
+   "clock_from": 1767225600,
+   "clock_to": 1767225600
+  },
+  {
+   "kind": "advance",
+   "real_from": 1794950381,
+   "real_to": 1794950387,
+   "clock_from": 1767225600,
+   "clock_to": 1768035600
+  },
+  {
+   "kind": "action",
+   "real_from": 1794950386,
+   "real_to": 1794950392,
+   "clock_from": 1768035600,
+   "clock_to": 1768035600
+  },
+  {
+   "kind": "advance",
+   "real_from": 1794950391,
+   "real_to": 1794950406,
+   "clock_from": 1768035600,
+   "clock_to": 1768910400
+  },
+  {
+   "kind": "action",
+   "real_from": 1794950405,
+   "real_to": 1794950408,
+   "clock_from": 1768910400,
+   "clock_to": 1768910400
+  },
+  {
+   "kind": "advance",
+   "real_from": 1794950407,
+   "real_to": 1794950413,
+   "clock_from": 1768910400,
+   "clock_to": 1769903999
+  },
+  {
+   "kind": "advance",
+   "real_from": 1794950412,
+   "real_to": 1794950440,
+   "clock_from": 1769903999,
+   "clock_to": 1770292800
+  },
+  {
+   "kind": "action",
+   "real_from": 1794950439,
+   "real_to": 1794950442,
+   "clock_from": 1770292800,
+   "clock_to": 1770292800
+  },
+  {
+   "kind": "advance",
+   "real_from": 1794950441,
+   "real_to": 1794950479,
+   "clock_from": 1770292800,
+   "clock_to": 1770908400
+  },
+  {
+   "kind": "action",
+   "real_from": 1794950478,
+   "real_to": 1794950481,
+   "clock_from": 1770908400,
+   "clock_to": 1770908400
+  },
+  {
+   "kind": "advance",
+   "real_from": 1794950480,
+   "real_to": 1794950486,
+   "clock_from": 1770908400,
+   "clock_to": 1770976800
+  },
+  {
+   "kind": "action",
+   "real_from": 1794950485,
+   "real_to": 1794950491,
+   "clock_from": 1770976800,
+   "clock_to": 1770976800
+  },
+  {
+   "kind": "advance",
+   "real_from": 1794950490,
+   "real_to": 1794950503,
+   "clock_from": 1770976800,
+   "clock_to": 1771588800
+  },
+  {
+   "kind": "action",
+   "real_from": 1794950502,
+   "real_to": 1794950505,
+   "clock_from": 1771588800,
+   "clock_to": 1771588800
+  },
+  {
+   "kind": "advance",
+   "real_from": 1794950504,
+   "real_to": 1794950509,
+   "clock_from": 1771588800,
+   "clock_to": 1772323199
+  },
+  {
+   "kind": "advance",
+   "real_from": 1794950508,
+   "real_to": 1794950519,
+   "clock_from": 1772323199,
+   "clock_to": 1772708400
+  },
+  {
+   "kind": "action",
+   "real_from": 1794950518,
+   "real_to": 1794950522,
+   "clock_from": 1772708400,
+   "clock_to": 1772708400
+  },
+  {
+   "kind": "advance",
+   "real_from": 1794950521,
+   "real_to": 1794950534,
+   "clock_from": 1772708400,
+   "clock_to": 1773144000
+  },
+  {
+   "kind": "action",
+   "real_from": 1794950533,
+   "real_to": 1794950535,
+   "clock_from": 1773144000,
+   "clock_to": 1773144000
+  },
+  {
+   "kind": "advance",
+   "real_from": 1794950534,
+   "real_to": 1794950540,
+   "clock_from": 1773144000,
+   "clock_to": 1774008000
+  },
+  {
+   "kind": "action",
+   "real_from": 1794950539,
+   "real_to": 1794950541,
+   "clock_from": 1774008000,
+   "clock_to": 1774008000
+  },
+  {
+   "kind": "advance",
+   "real_from": 1794950540,
+   "real_to": 1794950546,
+   "clock_from": 1774008000,
+   "clock_to": 1775001599
+  },
+  {
+   "kind": "advance",
+   "real_from": 1794950545,
+   "real_to": 1794950563,
+   "clock_from": 1775001599,
+   "clock_to": 1777550400
+  }
+ ],
+ "customers": {
+  "northwind": "cus_VeCABjsGOdFas1",
+  "bluefin": "cus_VeCB891GCOXY17",
+  "kestrel": "cus_VeCBnwj83Qexu2",
+  "orchid": "cus_VeCBqPE0sjxAKS",
+  "pinecrest": "cus_VeCB3S7C5G5UK6",
+  "quill": "cus_VeCB7XgfvHn93P"
+ },
+ "prices": {
+  "starter_m": "price_1UctmWROcjQxKzdcozAtp7hI",
+  "growth_m": "price_1UctmXROcjQxKzdchQhqaGMr",
+  "growth_y": "price_1UctmXROcjQxKzdciyx800pB",
+  "scale_m": "price_1UctmZROcjQxKzdc9D5Bdd6Z",
+  "seat_m": "price_1UctmaROcjQxKzdcNJkuTDXj"
+ },
+ "coupon": "nw5WqpZr",
+ "rows": {
+  "customers": 6,
+  "products": 4,
+  "prices": 5,
+  "coupons": 1,
+  "discounts": 1,
+  "subscriptions": 6,
+  "subscription_items": 7,
+  "invoices": 20,
+  "invoice_line_items": 26,
+  "charges": 29,
+  "refunds": 1
+ }
+}

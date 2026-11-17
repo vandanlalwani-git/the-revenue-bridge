@@ -23,6 +23,7 @@ Usage: python -m notes.evaluate
 """
 from __future__ import annotations
 
+import argparse
 import json
 import re
 import subprocess
@@ -32,7 +33,10 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 from notes.checks import CITATION, format_problems, numbers_with_citations, word_numbers, words
-from notes.write_notes import NOTES, ROOT, sha256
+from notes.sets import SETS, paths
+from notes.write_notes import ROOT, sha256
+
+P = paths("v1")             # set by main(); v1 unless --set says otherwise
 
 ANOMALY = re.compile(r"\b(spik\w*|surg\w*|sharp\w*|unusual\w*|concentrat\w*|jump\w*|soar\w*|plung\w*|"
                      r"collaps\w*|outsized|exceptional\w*|dramatic\w*)\b", re.I)
@@ -42,23 +46,23 @@ CAUSAL = re.compile(r"\b(because|due to|driven by|as a result|caused by|thanks t
 
 # ---- loading, with the freeze check --------------------------------------------------
 def load_notes() -> dict:
-    freeze_path = NOTES / "FREEZE.json"
+    freeze_path = P["freeze"]
     if not freeze_path.exists():
         sys.exit("notes/FREEZE.json is missing: refusing to evaluate.")
     freeze = json.loads(freeze_path.read_text())
-    if sha256(NOTES / "prompt.md") != freeze["prompt_sha256"]:
-        sys.exit("notes/prompt.md no longer matches FREEZE.json: refusing to evaluate.")
+    if sha256(P["prompt"]) != freeze["prompt_sha256"]:
+        sys.exit(f"{P['prompt']} no longer matches its FREEZE.json: refusing to evaluate.")
     notes = {}
-    for meta_path in sorted((NOTES / "output").glob("*.meta.json")):
+    for meta_path in sorted(P["output"].glob("*.meta.json")):
         meta = json.loads(meta_path.read_text())
         month = meta["month"]
-        facts_path = NOTES / "facts" / f"{month}.json"
+        facts_path = P["facts"] / f"{month}.json"
         bad = [k for k, want in (("prompt_sha256", freeze["prompt_sha256"]), ("model_requested", freeze["model"]),
                                  ("cli_version", freeze["cli_version"]), ("facts_sha256", sha256(facts_path)))
                if meta.get(k) != want]
         if bad or meta.get("dev_seed"):
             sys.exit(f"{month}: note does not match the freeze or the facts ({', '.join(bad) or 'dev seed'}).")
-        notes[month] = {"text": (NOTES / "output" / f"{month}.md").read_text().strip(),
+        notes[month] = {"text": (P["output"] / f"{month}.md").read_text().strip(),
                         "facts": json.loads(facts_path.read_text())["facts"], "meta": meta}
     if len(notes) != 18:
         sys.exit(f"expected 18 notes, found {len(notes)}.")
@@ -82,7 +86,7 @@ def grounding(text: str, facts: list[dict]) -> list[dict]:
     by_id = {f["id"]: f for f in facts}
     numeric = [f for f in facts if not isinstance(f["value"], str)]
     results = []
-    for token, fid in numbers_with_citations(text):
+    for token, fid in numbers_with_citations(text, P["exempt_re"]):
         t = norm(token)
         if fid is None:
             status = "uncited"
@@ -156,9 +160,16 @@ def cites_value(note, value: str) -> bool:
     return any(f["value"] == value for f in cited(note)) or value in note["text"]
 
 
+def customer_name(customer_id: str) -> str:
+    import duckdb
+    return duckdb.connect().execute(f"SELECT name FROM '{ROOT / 'data' / 'raw' / 'customers.parquet'}' WHERE id = ?",
+                                    [customer_id]).fetchone()[0]
+
+
 def narrative_rules(key: dict) -> dict:
     """(event, month, signal) -> rule(note). Each rule names what counts as a mention."""
     e2 = next(e for e in key["events"] if e["id"] == "E2")["details"]["customer"]
+    e2_name = customer_name(e2)
     e6 = next(e for e in key["events"] if e["id"] == "E6")["details"]["customer"]
     starter_vol = lambda n: (cites_label(n, r"^Starter (customers|MRR) churned, voluntary")
                              or sentence_with(n, r"\bStarter\b", r"churn"))
@@ -166,7 +177,7 @@ def narrative_rules(key: dict) -> dict:
         ("E1", "2025-09", 0): lambda n: cites_label(n, r"from price change") or says(n, r"price (change|rise|increase)"),
         ("E1", "2025-09", 1): starter_vol,
         ("E1", "2025-10", 2): starter_vol,
-        ("E2", "2025-11", 0): lambda n: cites_value(n, e2) or says(n, r"\b(single|largest) (customer|account|logo)"),
+        ("E2", "2025-11", 0): lambda n: cites_value(n, e2) or cites_value(n, e2_name) or says(n, r"\b(single|largest) (customer|account|logo)"),
         ("E2", "2025-11", 1): lambda n: cites_label(n, r"^Gross MRR churn") and cites_label(n, r"^Logo churn"),
         ("E3", "2026-04", 0): lambda n: cites_label(n, r"from discount ended") or says(n, r"discount"),
         ("E3", "2026-04", 1): lambda n: sentence_with(n, r"2026-01|January", r"churn|left|lost|retention"),
@@ -227,7 +238,7 @@ def metrics_layer() -> dict:
 def evaluate() -> dict:
     notes = load_notes()
     key = json.loads((ROOT / "data" / "answer_key.json").read_text())
-    review_path = NOTES / "review.json"
+    review_path = P["review"]
     review = json.loads(review_path.read_text()) if review_path.exists() else {}
     review_months = review.get("months", {})
 
@@ -238,7 +249,7 @@ def evaluate() -> dict:
         reviewed = review_months.get(month, {}).get("unsupported_causes", [])
         months[month] = {
             "words": words(note["text"]),
-            "format_problems": format_problems(note["text"], ids),
+            "format_problems": format_problems(note["text"], ids, P["min_words"], P["max_words"], P["bullets"], P["exempt_re"]),
             "numbers": len(g),
             "grounded": sum(r["status"] == "grounded" for r in g),
             "miscited": [r for r in g if r["status"] == "miscited"],
@@ -321,10 +332,14 @@ def markdown(card: dict) -> str:
     return "\n".join(lines) + "\n"
 
 
-def main():
+def main(argv=None):
+    global P
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument("--set", default="v1", choices=sorted(SETS))
+    P = paths(ap.parse_args(argv).set)
     card = evaluate()
-    (NOTES / "scorecard.json").write_text(json.dumps(card, indent=1, ensure_ascii=False) + "\n")
-    (NOTES / "scorecard.md").write_text(markdown(card))
+    P["scorecard_json"].write_text(json.dumps(card, indent=1, ensure_ascii=False) + "\n")
+    P["scorecard_md"].write_text(markdown(card))
     print(json.dumps(card["summary"], indent=1))
 
 

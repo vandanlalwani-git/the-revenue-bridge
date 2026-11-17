@@ -12,17 +12,18 @@ The judgement calls are in [docs/metric_definitions.md](docs/metric_definitions.
 
 One static page on GitHub Pages, deployed from `site/` by a GitHub Actions workflow. A month picker drives the whole page across the 18 reporting months (2025-01 to 2026-06).
 
+Redesigned at Vandan's request (2026-11-16) in the order a founder reads a month:
+
 | # | Section | What the viewer sees |
 |---|---------|----------------------|
-| 1 | **Header** | Name, a one-line pitch, a "Synthetic test data, Stripe schema, USD" badge, and links to the repo, write-up and video. |
-| 2 | **KPI strip** | Closing MRR, MoM growth, logo churn %, gross MRR churn %, 12-month NRR / GRR, and at-risk MRR in dunning. |
-| 3 | **MRR bridge** | Waterfall chart: Opening → +New → +Expansion → +Reactivation → −Contraction → −Churn (voluntary / involuntary) → Closing. Expansion and contraction are split by driver. |
-| 4 | **Founder notes** | 3 featured notes (2025-11, 2026-02, 2026-06 control). Each figure cites a fact ID that links to its source row. The other 15 notes are linked in the repo. |
-| 5 | **Cohort retention** | Heatmap of cohort month × months since first paid month, with a toggle between logo retention and revenue retention. |
-| 6 | **MRR → Revenue → Billings → Cash** | Three bridges per month, each with an "Unexplained" line that must show $0.00. Below them, rollforwards for deferred revenue and receivables, plus bad-debt expense. |
-| 7 | **Evaluation scorecard** | All 18 notes: planted events caught or missed at the metrics layer and the narrative layer, ungrounded numbers (target 0), word-number violations (target 0), and unsupported anomaly claims in quiet months. It also shows the frozen prompt's hash. |
-| 8 | **Metric definitions** | The judgement-call document. |
-| 9 | **How it's built** | A pipeline diagram, the stack, and the frozen-prompt protocol. |
+| 1 | **Top bar** | Name, month stepper (previous / next / pick), section links, and links to the repo, write-up and video once they exist. |
+| 2 | **This month** | The month as the headline, the pitch, a "Synthetic SaaS · Stripe schema · USD" badge, and 6 KPI cards with 18-month trend lines: MRR, net revenue, net cash, logo churn, 12-month NRR (with GRR), at-risk MRR. |
+| 3 | **The founder note** | That month's note (all 18 available). Each citation shows its fact on hover or tap. |
+| 4 | **What moved MRR** | Waterfall bridge, drivers of expansion and contraction, customer movements. |
+| 5 | **From MRR to cash** | One continuous statement, MRR → net revenue → billings → net cash, each step ending in "ties · unexplained $0.00"; the four numbers side by side; balance-sheet rollforwards and the provision matrix folded below. |
+| 6 | **Are we keeping customers?** | NRR/GRR and churn trend lines; month-3 retention by signup cohort, with the selected cohort's curve against the weighted average (customers or revenue). |
+| 7 | **Can you trust the notes?** | Headline scores, the 8 planted events with caught or missed per signal, the frozen prompt's hash, and the manual review. |
+| 8 | **How it's built** | Pipeline, the numbers, the frozen-prompt protocol, and the metric definitions folded below. |
 
 **Deliverables:** the page, a 300–500 word write-up (`docs/writeup.md`), a 2-minute walkthrough, and a public repo.
 
@@ -154,7 +155,7 @@ the-revenue-bridge/
 │  ├─ schema.py            # Stripe-shaped table schemas
 │  └─ generate.py          # seeded simulation → data/raw/*.parquet, data/answer_key.json
 ├─ data/raw/               # generated (reproducible from seed)
-├─ stripe_check/           # Day 8, first to cut
+├─ stripe_check/           # Stripe test-clock run and its export (data/raw)
 ├─ sql/
 │  ├─ 00_staging.sql       # typed lines, calendar, dunning spells, round_half_up macro
 │  ├─ 10_mrr.sql           # month-end MRR (as ARR cents) rebuilt from invoice lines, at-risk flag
@@ -186,9 +187,9 @@ the-revenue-bridge/
 | 3 | Staging, month-end MRR, movements and drivers, display rounding | **✅ Gate 2 signed off: bridge ties all 30 months; rebuild = truth for all 7,257 customer-months** |
 | 4 | Retention (logo churn, MRR churn, NRR, GRR, cohorts), revenue recognition by the second, refund split | ✅ Done 2026-10-29: revenue matches an independent Python recomputation every month; D4 and E5 checks pass |
 | 5 | Daily MRR snapshots for average MRR (R1), ledger (contract liability, receivables, IFRS 9 provision matrix), cash, three reconciliations | **✅ Gate 3 signed off 2026-11-12: R1–R3 and all rollforwards show $0.00 unexplained in all 30 months; adjustment 6 applied; provision matrix moved to four aged buckets. Data and answer key frozen.** |
-| 6 | Facts builder. Prompt written, format-linted on the dev seed, frozen. 18 notes via `claude -p`. Then the evaluator | ✅ Scorecard produced 2026-11-13 (`notes/scorecard.md`): 510/511 numbers grounded, 0 hallucinations, 19/20 primary signals caught; manual review confirmed by Vandan |
-| 7 | Static site | Page renders locally |
-| 8 | Stripe test-clock check, GitHub Actions Pages workflow, polish | Same SQL runs on the Stripe export |
+| 6 | Facts builder. Prompt written, format-linted on the dev seed, frozen. 18 notes via `claude -p`. Then the evaluator | ✅ Scorecard produced 2026-11-13 (`notes/scorecard.md`): 510/511 numbers grounded, 0 hallucinations, 19/20 primary signals caught; manual review confirmed by Vandan. **v2** (founder's-update format, requested 2026-11-17): frozen separately; 427/427 numbers grounded, 0 hallucinations, 19/20 primary signals; manual review awaiting Vandan's confirmation |
+| 7 | Static site | ✅ Done 2026-11-16, redesigned the same day: `site/index.html` built by `site/build_site.py` (no external scripts, SVG charts); checked on desktop and phone; 7 site tests |
+| 8 | Stripe test-clock check, GitHub Actions Pages workflow, polish | ✅ Done 2026-11-18: 6 customers, 4 months on Stripe test clocks; the unchanged SQL ties to $0.00 on the export and matches the scenario (`tests/test_stripe_check.py`) |
 | 9 | Write-up, 2-min video, go live | Live URL |
 
 Days 10–11 are slack.

@@ -1,0 +1,631 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>The Revenue Bridge</title>
+<meta name="description" content="A SaaS finance pack on Stripe-shaped test data: MRR tied to IFRS 15 revenue and to cash, with AI founder notes tested against a hidden answer key.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a monthly close read top-down — headline, the founder's note, MRR, MRR→cash, retention, then proof. */
+:root {
+  --bg: #f6f7f9; --surface: #ffffff; --raised: #fbfcfd; --ink: #0d1117; --muted: #5d6674; --faint: #8c95a3;
+  --line: #e5e8ed; --line-strong: #d3d8e0;
+  --accent: #0c9c84; --accent-ink: #087866; --accent-soft: #e3f4f0;
+  --neg: #df5640; --neg-soft: #fbe9e5; --amber: #c98a26; --total: #1e2836; --series2: #8a94a6;
+  --sans: "Geist", "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --radius: 16px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0a0d12; --surface: #11151c; --raised: #151a22; --ink: #e9edf2; --muted: #9aa4b2; --faint: #6d7684;
+    --line: #1f2530; --line-strong: #2b3340;
+    --accent: #34c9ac; --accent-ink: #5fdcc3; --accent-soft: #10302a;
+    --neg: #f1735f; --neg-soft: #36191474; --amber: #e3ab52; --total: #c7d0dc; --series2: #7f8a9c; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0a0d12; --surface: #11151c; --raised: #151a22; --ink: #e9edf2; --muted: #9aa4b2; --faint: #6d7684;
+  --line: #1f2530; --line-strong: #2b3340;
+  --accent: #34c9ac; --accent-ink: #5fdcc3; --accent-soft: #10302a;
+  --neg: #f1735f; --neg-soft: #36191474; --amber: #e3ab52; --total: #c7d0dc; --series2: #7f8a9c; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 76px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15.5px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+a { color: var(--accent-ink); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+.wrap { max-width: 1160px; margin: 0 auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { margin: 0; letter-spacing: -0.02em; text-wrap: balance; }
+h2 { font-size: 22px; font-weight: 600; }
+h3 { font-size: 14px; font-weight: 600; letter-spacing: -0.005em; }
+p { margin: 0; }
+.mono, .num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.muted { color: var(--muted); }
+
+/* top bar */
+.topbar { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 86%, transparent); backdrop-filter: saturate(1.4) blur(12px); -webkit-backdrop-filter: saturate(1.4) blur(12px); border-bottom: 1px solid var(--line); padding-top: env(safe-area-inset-top, 0px); }
+.topbar .wrap { display: flex; align-items: center; gap: 14px 24px; min-height: 60px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 600; letter-spacing: -0.01em; text-decoration: none; color: var(--ink); white-space: nowrap; }
+.brand svg { flex: none; }
+.stepper { display: flex; align-items: center; gap: 4px; padding: 3px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.stepper button { width: 32px; height: 32px; border: none; background: none; border-radius: 9px; cursor: pointer; color: var(--muted); display: grid; place-items: center; }
+.stepper button:hover:not(:disabled) { background: var(--bg); color: var(--ink); }
+.stepper button:disabled { opacity: .35; cursor: default; }
+.stepper select { appearance: none; -webkit-appearance: none; border: none; background: none; font: 500 14px var(--sans); color: var(--ink); padding: 6px 8px; text-align: center; cursor: pointer; }
+.topnav { display: flex; gap: 2px; margin-left: auto; }
+.topnav a { color: var(--muted); text-decoration: none; font-size: 13.5px; padding: 6px 10px; border-radius: 8px; }
+.topnav a:hover { color: var(--ink); background: var(--surface); }
+@media (max-width: 860px) { .topnav { display: none; } }
+.toplinks { display: flex; gap: 14px; font-size: 13.5px; }
+.toplinks:empty { display: none; }
+
+/* hero */
+.hero { padding-block: 44px 8px; }
+.eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--muted); border: 1px solid var(--line); background: var(--surface); padding: 4px 11px 4px 9px; border-radius: 999px; }
+.eyebrow i { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+.hero h1 { font-size: clamp(36px, 5.5vw, 56px); font-weight: 600; line-height: 1.04; margin-top: 18px; letter-spacing: -0.035em; }
+.hero .lede { font-size: 17px; color: var(--muted); margin-top: 12px; max-width: 64ch; }
+
+.kpis { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 28px; }
+@media (min-width: 720px) { .kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 1080px) { .kpis { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+.kpi { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 15px 16px 12px; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.kpi .k { font-size: 12.5px; color: var(--muted); }
+.kpi .v { font: 500 24px/1.15 var(--mono); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.kpi .d { font: 500 12.5px var(--mono); color: var(--faint); min-height: 18px; display: flex; gap: 5px; align-items: baseline; }
+.kpi .d b { font-size: 9px; font-weight: 400; }
+.kpi .d.good { color: var(--accent-ink); } .kpi .d.bad { color: var(--neg); } .kpi .d.flat { color: var(--amber); }
+.kpi .s { font-size: 12px; color: var(--faint); }
+.kpi .spark { position: relative; height: 30px; margin-top: 8px; }
+.kpi .spark svg { width: 100%; height: 30px; display: block; overflow: visible; }
+.kpi .spark i { position: absolute; width: 8px; height: 8px; border-radius: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 0 2px var(--surface); }
+
+/* sections */
+section.block { padding-top: 56px; }
+.head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 10px 24px; margin-bottom: 16px; }
+.head p { color: var(--muted); margin-top: 6px; max-width: 66ch; font-size: 14.5px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px 24px; min-width: 0; }
+.card + .card { margin-top: 14px; }
+.cols { display: grid; grid-template-columns: 1fr; gap: 14px; }
+@media (min-width: 900px) { .cols.two { grid-template-columns: 1fr 1fr; } .cols.wide-narrow { grid-template-columns: 1.45fr 1fr; align-items: start; } }
+.card-title { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 14px; }
+.card-title span { font-size: 12.5px; color: var(--faint); }
+
+/* founder's update */
+.update { padding: 26px 28px 10px; }
+.headline { font-size: clamp(19px, 2.2vw, 23px); line-height: 1.45; font-weight: 500; letter-spacing: -0.015em; max-width: 62ch; }
+.bullets { list-style: none; margin: 18px 0 0; padding: 0; }
+.bullets li { display: grid; grid-template-columns: 1fr; gap: 4px 28px; padding: 16px 0; border-top: 1px solid var(--line); }
+@media (min-width: 800px) { .bullets li { grid-template-columns: 190px 1fr; } }
+.bullets .topic { font-weight: 600; font-size: 14.5px; }
+.bullets .what { font-size: 15.5px; line-height: 1.65; max-width: 72ch; }
+.bullets .means { margin-top: 8px; display: flex; gap: 10px; align-items: baseline; color: var(--muted); font-size: 14.5px; line-height: 1.6; max-width: 72ch; }
+.bullets .means span:first-child { flex: none; font-size: 11.5px; font-weight: 600; letter-spacing: .02em; color: var(--accent-ink); background: var(--accent-soft); padding: 2px 8px; border-radius: 999px; }
+.fig { position: relative; font-variant-numeric: tabular-nums; border-bottom: 1px dashed var(--faint); cursor: help; white-space: nowrap; }
+.fig:hover, .fig:focus-visible, .fig.open { border-bottom-color: var(--accent); color: var(--accent-ink); outline: none; }
+.fig::after { content: attr(data-tip); display: none; position: absolute; left: 50%; bottom: calc(100% + 8px); transform: translateX(-50%); width: max-content; max-width: 260px; padding: 7px 10px; border-radius: 8px; background: var(--ink); color: var(--bg); font: 12px/1.4 var(--sans); text-align: left; white-space: normal; pointer-events: none; z-index: 30; }
+.fig:hover::after, .fig:focus-visible::after, .fig.open::after { display: block; }
+@media (max-width: 640px) {
+  .fig::after { position: fixed; left: 16px; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); transform: none; width: auto; max-width: none; font-size: 13px; padding: 10px 12px; }
+}
+
+/* charts */
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.chart text { font: 11.5px var(--mono); fill: var(--faint); }
+.chart .lbl { fill: var(--ink); font-size: 12px; }
+.chart.scroll-x { overflow-x: auto; }
+.chart.scroll-x svg { min-width: 560px; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12.5px; color: var(--muted); margin-top: 12px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+.legend i.line { height: 2px; border-radius: 2px; vertical-align: 3px; width: 14px; }
+
+.mini { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.mini td, .mini th { padding: 8px 0; border-bottom: 1px solid var(--line); text-align: left; }
+.mini th { font-size: 12px; font-weight: 500; color: var(--faint); }
+.mini tr:last-child td { border-bottom: none; }
+.mini .num { text-align: right; padding-left: 12px; white-space: nowrap; }
+.tag { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; padding: 2px 9px; border-radius: 999px; background: var(--bg); color: var(--muted); border: 1px solid var(--line); white-space: nowrap; }
+.tag.good { background: var(--accent-soft); color: var(--accent-ink); border-color: transparent; }
+.tag.bad { background: var(--neg-soft); color: var(--neg); border-color: transparent; }
+
+/* MRR to cash statement */
+.stmt { width: 100%; border-collapse: collapse; font-size: 14px; }
+.stmt td { padding: 7px 0; }
+.stmt .num { text-align: right; white-space: nowrap; }
+.stmt tr.item td:first-child { padding-left: 18px; color: var(--muted); }
+.stmt tr.item .num { color: var(--muted); }
+.stmt tr.anchor td { padding-top: 12px; padding-bottom: 12px; font-weight: 600; font-size: 15px; border-top: 1px solid var(--line-strong); }
+.stmt tr.anchor:first-child td { border-top: none; padding-top: 0; }
+.stmt tr.anchor .num { font: 600 15.5px var(--mono); }
+.stmt .tie { display: inline-flex; margin-left: 10px; font: 500 11.5px var(--sans); color: var(--accent-ink); background: var(--accent-soft); padding: 1px 8px; border-radius: 999px; vertical-align: 2px; }
+.stmt .tie.bad { color: var(--neg); background: var(--neg-soft); }
+.scale-bars { display: flex; flex-direction: column; gap: 16px; }
+.scale-bars .row .top { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); }
+.scale-bars .row .top b { font: 500 14px var(--mono); color: var(--ink); }
+.scale-bars .track { height: 10px; border-radius: 6px; background: var(--bg); margin-top: 7px; overflow: hidden; }
+.scale-bars .track span { display: block; height: 100%; border-radius: 6px; background: var(--total); transition: width .35s ease; }
+.scale-bars .row:nth-child(1) .track span { background: var(--accent); }
+.callout { margin-top: 18px; padding: 14px 16px; border-radius: 12px; background: var(--bg); font-size: 13.5px; color: var(--muted); }
+.callout b { color: var(--ink); font-weight: 600; }
+
+details.fold { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); margin-top: 14px; }
+details.fold > summary { list-style: none; cursor: pointer; padding: 16px 22px; display: flex; justify-content: space-between; align-items: center; gap: 12px; font-weight: 500; }
+details.fold > summary::-webkit-details-marker { display: none; }
+details.fold > summary::after { content: "+"; font: 400 20px var(--mono); color: var(--faint); }
+details.fold[open] > summary::after { content: "–"; }
+details.fold > summary span { font-size: 13px; color: var(--faint); font-weight: 400; margin-left: auto; margin-right: 8px; }
+.fold-body { padding: 0 22px 22px; }
+.ledger { display: grid; grid-template-columns: 1fr; gap: 24px; }
+@media (min-width: 900px) { .ledger { grid-template-columns: repeat(3, 1fr); } }
+.ledger table td:first-child { color: var(--muted); }
+.ledger tr.total td { color: var(--ink); font-weight: 600; border-top: 1px solid var(--line-strong); }
+
+.matrix { margin-top: 30px; padding-top: 24px; border-top: 1px solid var(--line); }
+.steps { margin: 12px 0 16px; padding-left: 20px; color: var(--muted); font-size: 14px; display: flex; flex-direction: column; gap: 6px; max-width: 80ch; }
+.steps b { color: var(--ink); font-weight: 600; }
+.matrix-table td small { display: block; font: 11.5px var(--sans); color: var(--faint); margin-top: 2px; }
+.matrix-table tr.empty td { color: var(--faint); }
+.matrix-table tr.total td { font-weight: 600; border-top: 1px solid var(--line-strong); }
+.equation { margin-top: 16px; padding: 12px 14px; border-radius: 12px; background: var(--bg); display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: baseline; font-size: 13.5px; color: var(--muted); }
+.equation b { font: 600 14px var(--mono); color: var(--ink); }
+
+/* retention */
+.seg { display: inline-flex; padding: 3px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+.seg button { border: none; background: none; padding: 5px 12px; border-radius: 7px; font-size: 13px; cursor: pointer; color: var(--muted); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.hint { font-size: 12.5px; color: var(--faint); margin-top: 10px; }
+.bar-hit { cursor: pointer; }
+
+/* trust */
+.stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+@media (min-width: 900px) { .stats { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.stat { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px; }
+.stat .v { font: 500 28px/1.1 var(--mono); letter-spacing: -0.02em; }
+.stat .k { font-size: 13px; color: var(--muted); margin-top: 6px; }
+.stat .was, .event .was { font: 12px var(--mono); color: var(--faint); }
+.stat .was { margin-top: 8px; }
+.event .verdict { display: flex; gap: 12px; align-items: center; }
+.events { margin-top: 14px; }
+.event { border-top: 1px solid var(--line); }
+.event:first-child { border-top: none; }
+.event > summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 44px 1fr auto; gap: 4px 14px; align-items: center; padding: 13px 0; }
+.event > summary::-webkit-details-marker { display: none; }
+.event .id { font: 500 12.5px var(--mono); color: var(--faint); }
+.event .name { font-weight: 500; }
+.event .when { font: 12.5px var(--mono); color: var(--faint); margin-left: 8px; font-weight: 400; }
+.event ul { margin: 0 0 14px 58px; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; font-size: 13.5px; color: var(--muted); }
+.event li { display: flex; gap: 10px; align-items: baseline; }
+.event li .tag { flex: none; }
+.review { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; display: flex; flex-direction: column; gap: 8px; max-width: 80ch; }
+
+/* method */
+.pipeline { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.pipeline span { font: 12.5px var(--mono); padding: 7px 11px; border: 1px solid var(--line); border-radius: 9px; background: var(--raised); }
+.pipeline i { color: var(--faint); font-style: normal; }
+.method ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; display: flex; flex-direction: column; gap: 8px; }
+.defs details { border-top: 1px solid var(--line); }
+.defs details:first-of-type { border-top: none; }
+.defs summary { cursor: pointer; padding: 12px 0; font-weight: 500; }
+.doc-body { padding-bottom: 16px; font-size: 14px; color: var(--muted); }
+.doc-body p, .doc-body ul, .doc-body ol { margin-top: 10px; max-width: 78ch; }
+.doc-body strong { color: var(--ink); font-weight: 600; }
+.doc-body pre { font: 12px/1.5 var(--mono); background: var(--bg); padding: 12px 14px; border-radius: 10px; overflow-x: auto; color: var(--ink); }
+.doc-body h4 { margin: 18px 0 0; font-size: 14px; color: var(--ink); }
+.doc-body table { border-collapse: collapse; font-size: 13px; margin-top: 10px; width: 100%; }
+.doc-body th, .doc-body td { border-bottom: 1px solid var(--line); padding: 6px 8px; text-align: left; vertical-align: top; }
+.scroll { overflow-x: auto; }
+code { font: .9em var(--mono); background: var(--bg); padding: 1px 5px; border-radius: 5px; }
+footer { padding-block: 56px 72px; color: var(--faint); font-size: 13px; }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="The Revenue Bridge, back to top">
+      <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect x="1" y="1" width="24" height="24" rx="7" fill="var(--ink)"/><path d="M6 18 V12 M20 18 V12 M6 12 Q13 5 20 12" fill="none" stroke="var(--bg)" stroke-width="2" stroke-linecap="round"/><path d="M5 18 H21" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/></svg>
+      The Revenue Bridge
+    </a>
+    <div class="stepper" role="group" aria-label="Month">
+      <button type="button" id="prev" aria-label="Previous month"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <select id="month" aria-label="Reporting month"></select>
+      <button type="button" id="next" aria-label="Next month"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+    <nav class="topnav" aria-label="Sections">
+      <a href="#note">Update</a><a href="#mrr">MRR</a><a href="#cash">MRR to cash</a><a href="#retention">Retention</a><a href="#trust">AI evaluation</a><a href="#method">Method</a>
+    </nav>
+    <div class="toplinks" id="links"></div>
+  </div>
+</header>
+
+<main class="wrap" id="top">
+  <section class="hero" aria-labelledby="month-title">
+    <span class="eyebrow"><i></i>Synthetic SaaS · Stripe schema · SQL checked on real Stripe · USD</span>
+    <h1 id="month-title"></h1>
+    <p class="lede">Most Stripe dashboards stop at MRR. This one ties MRR to IFRS 15 revenue and to cash, every month, to the cent. Its AI founder notes are scored against a hidden answer key.</p>
+    <div class="kpis" id="kpis"></div>
+  </section>
+
+  <section class="block" id="note" aria-labelledby="note-h">
+    <div class="head"><div><h2 id="note-h">Founder's update</h2><p>The month in a few points, each with what it means for the business. Drafted by Claude from this month's facts only; hover or tap any figure to see the fact behind it.</p></div></div>
+    <div class="card update">
+      <p class="headline" id="note-headline"></p>
+      <ul class="bullets" id="note-bullets"></ul>
+    </div>
+  </section>
+
+  <section class="block" id="mrr" aria-labelledby="mrr-h">
+    <div class="head"><div><h2 id="mrr-h">What moved MRR</h2><p>Opening and closing come from month-end MRR; each customer's movement is computed separately. The bridge has to tie, and it does, every month.</p></div></div>
+    <div class="card">
+      <div class="chart scroll-x" id="waterfall"></div>
+      <div class="legend"><span><i style="background:var(--total)"></i>Opening, closing</span><span><i style="background:var(--accent)"></i>Adds MRR</span><span><i style="background:var(--neg)"></i>Reduces MRR</span><span id="axis-note"></span></div>
+    </div>
+    <div class="cols two" style="margin-top:14px">
+      <div class="card"><div class="card-title"><h3>Drivers of expansion and contraction</h3><span>MRR · customers</span></div><table class="mini" id="drivers"></table></div>
+      <div class="card"><div class="card-title"><h3>Customer movements</h3><span>count</span></div><table class="mini" id="counts"></table></div>
+    </div>
+  </section>
+
+  <section class="block" id="cash" aria-labelledby="cash-h">
+    <div class="head"><div><h2 id="cash-h">From MRR to cash</h2><p>MRR is a run rate, revenue is what was earned under IFRS 15, billings are what was invoiced, cash is what came in. Each step is bridged line by line, with nothing left unexplained.</p></div></div>
+    <div class="cols wide-narrow">
+      <div class="card"><table class="stmt" id="stmt"></table></div>
+      <div class="card">
+        <div class="card-title"><h3>The four numbers side by side</h3></div>
+        <div class="scale-bars" id="scale"></div>
+        <div class="callout" id="cash-callout"></div>
+      </div>
+    </div>
+    <details class="fold">
+      <summary>Balance sheet: deferred revenue, receivables and credit losses<span id="fold-sub"></span></summary>
+      <div class="fold-body">
+        <div class="ledger">
+          <div><h3>Contract liability (deferred revenue)</h3><table class="mini" id="cl"></table></div>
+          <div><h3>Receivables</h3><table class="mini" id="ar"></table></div>
+          <div><h3>Credit-loss allowance (IFRS 9)</h3><table class="mini" id="al"></table></div>
+        </div>
+        <div class="matrix">
+          <h3>How the credit-loss allowance is worked out (IFRS 9 provision matrix)</h3>
+          <ol class="steps">
+            <li><b>Group</b> every unpaid invoice at month-end by how many times the customer's card has been declined. Stripe retries on days 3, 7 and 14, then writes the invoice off.</li>
+            <li><b>Apply a loss rate</b> to each group: the share of such balances actually lost over the past 12 months. A group further along never gets a lower rate than an earlier one.</li>
+            <li><b>Add up</b> the expected losses. The total is the allowance. Bad-debt expense is this month's write-offs plus the change in the allowance.</li>
+          </ol>
+          <div class="scroll"><table class="mini matrix-table" id="buckets"></table></div>
+          <p class="hint">The loss rate is measured in dollars, and counts only the part of a lost invoice that had already been earned (the rest was never revenue). The count under it shows how many invoices in that group over the past year were never paid.</p>
+          <div class="equation" id="bde"></div>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section class="block" id="retention" aria-labelledby="ret-h">
+    <div class="head"><div><h2 id="ret-h">Are we keeping customers?</h2><p>Twelve-month revenue retention and monthly churn over the 18 reporting months, then how each signup cohort holds up.</p></div></div>
+    <div class="cols two">
+      <div class="card"><div class="card-title"><h3>12-month revenue retention</h3><span>NRR · GRR</span></div><div class="chart" id="ret-trend"></div>
+        <div class="legend"><span><i class="line" style="background:var(--accent)"></i>NRR</span><span><i class="line" style="background:var(--series2)"></i>GRR</span></div><p class="hint" id="ret-note"></p></div>
+      <div class="card"><div class="card-title"><h3>Monthly churn</h3><span>% of opening</span></div><div class="chart" id="churn-trend"></div>
+        <div class="legend"><span><i class="line" style="background:var(--neg)"></i>Logo churn</span><span><i class="line" style="background:var(--amber)"></i>Gross MRR churn</span></div></div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <div class="head" style="margin-bottom:6px"><div><h3>Cohorts: how many are still paying three months in?</h3><p class="hint" style="margin-top:4px">Each bar is a signup cohort (month of first payment). Select one to see its full curve against the average.</p></div>
+        <div class="seg" role="group" aria-label="Retention measure"><button type="button" id="m-logo" aria-pressed="true">Customers</button><button type="button" id="m-rev" aria-pressed="false">Revenue</button></div></div>
+      <div class="cols wide-narrow">
+        <div class="chart" id="cohort-bars"></div>
+        <div><div class="chart" id="cohort-curve"></div>
+          <div class="legend"><span><i class="line" style="background:var(--accent)"></i><span id="curve-name">Selected cohort</span></span><span><i class="line" style="background:var(--series2)"></i>All cohorts, weighted</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="trust" aria-labelledby="trust-h">
+    <div class="head"><div><h2 id="trust-h">Can you trust the notes?</h2><p>The data has 8 planted events, written into a hidden answer key before any note existed. Every update is scored against it. A hallucination is a number that matches no fact, or a cause the facts don't show. The updates above are version 2; the original paragraph notes (version 1) were frozen and scored first, and both results are shown.</p></div><span class="tag" id="freeze"></span></div>
+    <div class="stats" id="stats"></div>
+    <div class="card events" id="events"></div>
+    <details class="fold"><summary>Manual review notes<span><!--__REVIEW_STATUS__--></span></summary><div class="fold-body"><ul class="review" id="comments"></ul></div></details>
+  </section>
+
+  <section class="block method" id="method" aria-labelledby="method-h">
+    <div class="head"><div><h2 id="method-h">Method</h2><p>Every number on this page comes from SQL over Stripe-shaped data, and is rounded by one display module shared with the notes and the evaluator. The same SQL was also run, unchanged, on billing data created by Stripe itself.</p></div></div>
+    <details class="fold"><summary>How it's built<span>pipeline, numbers, real-Stripe check, frozen-prompt protocol</span></summary><div class="fold-body">
+    <div class="pipeline" aria-label="Pipeline">
+      <span>scenario.yaml</span><i>→</i><span>seeded generator</span><i>→</i><span>Stripe-shaped parquet</span><i>→</i><span>DuckDB SQL</span><i>→</i><span>facts files</span><i>→</i><span>claude -p, no tools</span><i>→</i><span>evaluator</span><i>→</i><span>this page</span>
+    </div>
+    <div class="cols two" style="margin-top:18px">
+      <div><div class="card-title"><h3>The numbers</h3></div><ul>
+        <li>All money is integer cents; MRR is held as yearly cents so annual plans stay exact.</li>
+        <li>MRR is rebuilt from invoice lines, because Stripe's subscription table only shows today.</li>
+        <li>Revenue is recognised by the second over the service delivered (IFRS 15); credit losses use a provision matrix (IFRS 9).</li>
+        <li>Every bridge and rollforward has an Unexplained line computed in exact cents. It is $0.00 in all 30 months.</li>
+      </ul></div>
+      <div><div class="card-title"><h3>The frozen-prompt protocol</h3></div><ul>
+        <li>The answer key was finalised after the data was generated and before any note was written; every adjustment is logged in the write-up.</li>
+        <li>Before the freeze, the only check was a format lint on a separate practice dataset.</li>
+        <li>The prompt's SHA-256, the model and the CLI version are recorded; the evaluator refuses to run on any mismatch.</li>
+        <li>The note writer has no tools and no file access, so it cannot see the answer key.</li>
+      </ul></div>
+    </div>
+    <div class="cols two" style="margin-top:18px">
+      <div><div class="card-title"><h3>Checked on real Stripe</h3></div><ul>
+        <li>6 customers were played through 4 months on Stripe test clocks, in a Stripe test-mode account: a trial, an annual prepayment, an upgrade, extra seats, a 20% coupon, a refund, a card failure that recovered, and one where Stripe's own retries gave up and cancelled the subscription.</li>
+        <li>Stripe's objects were exported into the same tables and the unchanged SQL was run on them. Every reconciliation and rollforward ties to $0.00, and MRR matches the scenario worked out by hand.</li>
+        <li>The 30 months on this page are still the seeded synthetic data; the Stripe run shows the SQL is not fitted to it.</li>
+      </ul></div>
+      <div><div class="card-title"><h3>What real Stripe taught us</h3></div><ul>
+        <li>A subscription coupon is recorded on the invoice, not on each line; the line only carries the discount amount.</li>
+        <li>Stripe retried the failed card many times over about 2 weeks, cancelled the subscription as "payment failed" and left the invoice open. Writing it off is finance's step, as it is here.</li>
+        <li>Test clocks move invoices and subscriptions in simulated time, but stamp charges and refunds with real time. The export puts each payment back in the month it belongs to; a live account doesn't need this.</li>
+      </ul></div>
+    </div>
+    </div></details>
+    <details class="fold"><summary>Metric definitions<span>every judgement call, in full</span></summary><div class="fold-body defs"><!--__DEFINITIONS__--></div></details>
+  </section>
+</main>
+<footer class="wrap">All data is synthetic, generated from a fixed seed in Stripe's object model, and the SQL was also checked on a Stripe test-mode account. Nothing on this page comes from a real company.</footer>
+
+<script>
+const DATA = /*__DATA__*/null;
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+const MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const FULL = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const full = (m) => `${FULL[+m.slice(5) - 1]} ${m.slice(0, 4)}`;
+const short = (m) => `${MON[+m.slice(5) - 1]} ${m.slice(2, 4)}`;
+const months = DATA.months;
+let current = DATA.default_month, measure = "logo", cohortPick = null;
+const idx = () => months.indexOf(current);
+const series = (key) => months.map((m) => DATA.per_month[m].series[key]);
+const fmtAxis = (v) => Math.abs(v) >= 1000 ? `$${(v / 1000).toLocaleString("en-US", {maximumFractionDigits: 0})}k` : `$${Math.round(v)}`;
+function niceStep(range, n = 4) { const raw = range / n, p = Math.pow(10, Math.floor(Math.log10(raw))), q = raw / p; return (q < 1.5 ? 1 : q < 3 ? 2 : q < 7 ? 5 : 10) * p; }
+
+/* ---- small charts ---- */
+function sparkline(values, i, color) {
+  // Neutral line for the 18 months; the dot for this month takes the signal's colour.
+  const W = 120, H = 30, lo = Math.min(...values), hi = Math.max(...values), span = hi - lo || 1;
+  const x = (k) => (k / (values.length - 1)) * W, y = (v) => H - 3 - ((v - lo) / span) * (H - 6);
+  const d = values.map((v, k) => `${k ? "L" : "M"}${x(k).toFixed(1)},${y(v).toFixed(1)}`).join("");
+  // The line stretches to the card's width, so the dot is drawn in HTML on top of it to stay round.
+  return `<div class="spark"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true"><path d="${d}" fill="none" stroke="var(--line-strong)" stroke-width="1.6" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></svg>` +
+    `<i style="left:${(x(i) / W * 100).toFixed(2)}%;top:${(y(values[i]) / H * 100).toFixed(2)}%;background:${color}"></i></div>`;
+}
+
+function lineChart(lines, {fmt, lo: forceLo, hi: forceHi, marker = true} = {}) {
+  const W = 520, H = 220, L = 44, R = 12, T = 12, B = 28;
+  const all = lines.flatMap((l) => l.values.filter((v) => v != null));
+  let lo = Math.min(...all), hi = Math.max(...all);
+  const step = niceStep(hi - lo || 1);
+  lo = forceLo ?? Math.floor(lo / step) * step; hi = forceHi ?? Math.ceil(hi / step) * step;
+  const n = lines[0].values.length;
+  const x = (k) => L + (k / (n - 1)) * (W - L - R), y = (v) => T + (H - T - B) * (1 - (v - lo) / (hi - lo));
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img">`;
+  for (let v = lo; v <= hi + 1e-9; v += step) s += `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${L - 8}" y="${y(v) + 4}" text-anchor="end">${fmt(v)}</text>`;
+  months.forEach((m, k) => { if (+m.slice(5) % 3 === 1) s += `<text x="${x(k)}" y="${H - 8}" text-anchor="middle">${short(m)}</text>`; });
+  if (marker) s += `<line x1="${x(idx())}" x2="${x(idx())}" y1="${T}" y2="${H - B}" stroke="var(--line-strong)" stroke-dasharray="3 3"/>`;
+  const clip = `clip${Math.random().toString(36).slice(2, 8)}`;
+  s += `<clipPath id="${clip}"><rect x="${L}" y="${T - 4}" width="${W - L - R + 6}" height="${H - T - B + 8}"/></clipPath><g clip-path="url(#${clip})">`;
+  for (const l of lines) {
+    const d = l.values.map((v, k) => v == null ? "" : `${k && l.values[k - 1] != null ? "L" : "M"}${x(k).toFixed(1)},${y(v).toFixed(1)}`).join("");
+    s += `<path d="${d}" fill="none" stroke="${l.color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+    if (marker && l.values[idx()] != null) s += `<circle cx="${x(idx())}" cy="${y(l.values[idx()])}" r="4" fill="${l.color}" stroke="var(--surface)" stroke-width="2"><title>${esc(l.name)} ${full(current)}: ${l.values[idx()].toFixed(1)}%</title></circle>`;
+  }
+  return s + "</g></svg>";
+}
+
+/* ---- hero ---- */
+function renderHero(d) {
+  $("month-title").textContent = full(current);
+  const k = d.kpi, i = idx(), S = k.signals;
+  const tone = {good: "var(--accent)", bad: "var(--neg)", flat: "var(--amber)"};
+  const sig = (s) => s ? `<span class="d ${s.tone}"><b aria-hidden="true">${s.text.startsWith("no change") ? "●" : s.text.startsWith("−") ? "▼" : "▲"}</b>${esc(s.text)}</span>` : `<span class="d">first 12-month reading</span>`;
+  const tiles = [
+    ["MRR", k.closing_mrr, S.mrr, `${k.paying_customers} paying customers`, "mrr"],
+    ["Net revenue", k.net_revenue, S.net_revenue, "IFRS 15, after refunds", "net_revenue"],
+    ["Net cash collected", k.net_cash, S.net_cash, "after refunds", "net_cash"],
+    ["Logo churn", k.logo_churn, S.logo_churn, `gross MRR churn ${k.gross_mrr_churn}`, "logo_churn"],
+    ["NRR, 12-month", k.nrr, S.nrr, `GRR ${k.grr}`, "nrr"],
+    ["At-risk MRR", k.at_risk_mrr, S.at_risk, `${k.at_risk_customers} customer${k.at_risk_customers === 1 ? "" : "s"} in dunning`, "at_risk"],
+  ];
+  $("kpis").innerHTML = tiles.map(([key, v, s, sub, ser]) =>
+    `<div class="kpi"><div class="k">${key}</div><div class="v">${esc(v)}</div>${sig(s)}<span class="s">${esc(sub)}</span>${sparkline(series(ser), i, s ? tone[s.tone] : "var(--faint)")}</div>`).join("");
+}
+
+function renderNote() {
+  const n = DATA.notes[current];
+  $("note-headline").innerHTML = n.headline;
+  $("note-bullets").innerHTML = n.bullets.map((b) =>
+    `<li><div class="topic">${b.topic}</div><div><p class="what">${b.what}</p>${b.means ? `<p class="means"><span>What it means</span><span>${b.means}</span></p>` : ""}</div></li>`).join("");
+  document.querySelectorAll("#note .fig").forEach((f) => f.addEventListener("click", (e) => {
+    e.stopPropagation(); const was = f.classList.contains("open");
+    document.querySelectorAll(".fig.open").forEach((x) => x.classList.remove("open")); if (!was) f.classList.add("open");
+  }));
+}
+
+/* ---- MRR ---- */
+function renderWaterfall(d) {
+  const W = 920, H = 300, L = 58, R = 10, T = 26, B = 46;
+  let run = 0; const bars = d.bridge.map((s) => {
+    if (s.kind === "total") { run = s.value; return {...s, a: 0, b: s.value}; }
+    const a = run; run += s.value; return {...s, a, b: run};
+  });
+  const levels = bars.flatMap((b) => b.kind === "total" ? [b.b] : [b.a, b.b]);
+  const hi0 = Math.max(...levels), lo0 = Math.min(...levels), span = Math.max(hi0 - lo0, 1), step = niceStep(span * 1.5);
+  const lo = Math.max(0, Math.floor((lo0 - span * 0.3) / step) * step), hi = Math.ceil((hi0 + span * 0.12) / step) * step;
+  const y = (v) => T + (H - T - B) * (1 - (v - lo) / (hi - lo)), bw = (W - L - R) / bars.length;
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="MRR bridge for ${full(current)}">`;
+  for (let v = lo; v <= hi + 1e-9; v += step) s += `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${L - 10}" y="${y(v) + 4}" text-anchor="end">${fmtAxis(v)}</text>`;
+  bars.forEach((b, i) => {
+    const x = L + i * bw + bw * 0.2, w = bw * 0.6;
+    const top = b.kind === "total" ? y(b.b) : y(Math.max(b.a, b.b)), bot = b.kind === "total" ? y(lo) : y(Math.min(b.a, b.b));
+    const fill = b.kind === "total" ? "var(--total)" : b.value < 0 ? "var(--neg)" : "var(--accent)";
+    s += `<rect x="${x}" y="${top}" width="${w}" height="${Math.max(bot - top, 2)}" rx="4" fill="${fill}"${b.kind === "total" ? "" : ' opacity=".92"'}><title>${esc(b.label)}: ${esc(b.display)}</title></rect>`;
+    const val = b.kind === "total" ? b.display : (b.value > 0 ? "+" : "") + b.display;
+    s += `<text class="lbl" x="${x + w / 2}" y="${top - 8}" text-anchor="middle">${esc(val)}</text>`;
+    const [l1, l2] = b.label.split(", ");
+    s += `<text x="${x + w / 2}" y="${H - B + 18}" text-anchor="middle">${esc(l1)}</text>`;
+    if (l2) s += `<text x="${x + w / 2}" y="${H - B + 32}" text-anchor="middle">${esc(l2)}</text>`;
+    if (i < bars.length - 1) s += `<line x1="${x + w}" x2="${x + bw}" y1="${y(b.b)}" y2="${y(b.b)}" stroke="var(--faint)" stroke-dasharray="2 3"/>`;
+  });
+  $("waterfall").innerHTML = s + "</svg>";
+  $("axis-note").textContent = lo > 0 ? `Axis starts at ${fmtAxis(lo)}` : "";
+}
+
+function renderMovements(d) {
+  const rows = Object.entries(d.drivers).flatMap(([mv, list]) => list.map((x) =>
+    `<tr><td><span class="tag ${mv === "expansion" ? "good" : "bad"}">${mv === "expansion" ? "Expansion" : "Contraction"}</span> ${esc(x.driver)}</td><td class="num">${esc(x.display)}</td><td class="num">${x.customers}</td></tr>`));
+  $("drivers").innerHTML = rows.length ? `<tbody>${rows.join("")}</tbody>` : `<tbody><tr><td class="muted">No expansion or contraction this month.</td></tr></tbody>`;
+  const c = d.counts;
+  const items = [["New", c.new], ["Expanded", c.expanded], ["Reactivated", c.reactivated], ["Contracted", c.contracted],
+    ["Churned, voluntary", c.churned_voluntary], ["Churned, failed payments", c.churned_involuntary], ["Joined and left within the month", c.blind_spot]];
+  $("counts").innerHTML = `<tbody>${items.map(([k, v]) => `<tr><td>${k}</td><td class="num">${v}</td></tr>`).join("")}</tbody>`;
+}
+
+/* ---- MRR to cash ---- */
+function renderCash(d) {
+  const tie = (u) => `<span class="tie${u === "$0.00" ? "" : " bad"}">${u === "$0.00" ? "ties" : "off"} · unexplained ${esc(u)}</span>`;
+  const sign = (r) => (r.value > 0 ? "+" : "") + r.display;
+  const parts = [["r1", null], ["r2", d.unexplained.r1], ["r3", d.unexplained.r2]];
+  let h = "<tbody>";
+  parts.forEach(([key, prevTie], n) => {
+    const rows = d.recon[key];
+    if (n === 0) h += `<tr class="anchor"><td>${esc(rows[0].label)}</td><td class="num">${esc(rows[0].display)}</td></tr>`;
+    rows.slice(1, -1).forEach((r) => { h += `<tr class="item"><td>${esc(r.label)}</td><td class="num">${esc(sign(r))}</td></tr>`; });
+    const last = rows[rows.length - 1];
+    h += `<tr class="anchor"><td>${esc(last.label)}${tie(d.unexplained[key])}</td><td class="num">${esc(last.display)}</td></tr>`;
+  });
+  $("stmt").innerHTML = h + "</tbody>";
+  const anchors = [["MRR", d.recon.r1[0]], ["Net revenue", d.recon.r1.at(-1)], ["Billings", d.recon.r2.at(-1)], ["Net cash collected", d.recon.r3.at(-1)]];
+  const max = Math.max(...anchors.map(([, r]) => Math.abs(r.value)));
+  $("scale").innerHTML = anchors.map(([k, r]) => `<div class="row"><div class="top"><span>${k}</span><b>${esc(r.display)}</b></div><div class="track"><span style="width:${(Math.abs(r.value) / max * 100).toFixed(1)}%"></span></div></div>`).join("");
+  const clRow = d.recon.r2.find((r) => r.label.startsWith("Increase in contract liability")), clClose = d.roll.cl.at(-1).display;
+  $("cash-callout").innerHTML = clRow.value > 0
+    ? `Billings ran ahead of revenue: deferred revenue rose by <b>${esc(clRow.display)}</b> to <b>${esc(clClose)}</b>. That is cash or invoices for service not yet delivered, earned in later months.`
+    : clRow.value < 0
+      ? `Revenue ran ahead of billings: deferred revenue fell by <b>${esc(clRow.display.replace("−", ""))}</b> to <b>${esc(clClose)}</b> as prepaid service was delivered.`
+      : `Deferred revenue was unchanged at <b>${esc(clClose)}</b>.`;
+  const table = (rows, u) => `<tbody>${rows.map((r, i) => `<tr class="${i === rows.length - 1 ? "total" : ""}"><td>${esc(r.label)}</td><td class="num">${esc(i && i < rows.length - 1 ? sign(r) : r.display)}</td></tr>`).join("")}<tr><td>Unexplained</td><td class="num" style="color:var(--accent-ink)">${esc(u)}</td></tr></tbody>`;
+  for (const k of ["cl", "ar", "al"]) $(k).innerHTML = table(d.roll[k], d.unexplained[k]);
+  $("buckets").innerHTML = `<thead><tr><th>Group, by declined card retries</th><th class="num">Unpaid balance</th><th class="num">Loss rate</th><th class="num">Expected loss</th></tr></thead><tbody>` +
+    d.buckets.map((b) => `<tr class="${b.balance_cents ? "" : "empty"}"><td>${esc(b.bucket)}<small>${esc(b.days)}</small></td><td class="num">${esc(b.balance)}</td>` +
+      `<td class="num">${esc(b.rate)}<small>${b.floored ? `raised to the “${esc(b.rate_from.toLowerCase())}” rate` : esc(b.history.replace("never paid", "invoices never paid"))}</small></td><td class="num">${esc(b.expected_loss)}</td></tr>`).join("") +
+    `<tr class="total"><td>Allowance at month-end</td><td></td><td></td><td class="num">${esc(d.allowance.close)}</td></tr></tbody>`;
+  const A = d.allowance;
+  $("bde").innerHTML = `<span>Bad-debt expense</span><b>${esc(A.expense)}</b><span>=</span><span>write-offs</span><b>${esc(A.write_offs)}</b><span>+</span><span>change in allowance</span><b>${esc(A.change)}</b><span class="muted">(${esc(A.open)} → ${esc(A.close)})</span>`;
+  $("fold-sub").textContent = `bad-debt expense ${d.bad_debt}`;
+}
+
+/* ---- retention ---- */
+function renderTrends() {
+  // Early 2025 NRR runs far above 140% off a tiny 12-month base; the axis is capped so the rest stays readable.
+  $("ret-trend").innerHTML = lineChart([{name: "NRR", values: series("nrr"), color: "var(--accent)"}, {name: "GRR", values: series("grr"), color: "var(--series2)"}], {fmt: (v) => `${Math.round(v)}%`, lo: 60, hi: 140});
+  const over = months.filter((m) => DATA.per_month[m].series.nrr > 140);
+  $("ret-note").textContent = over.length ? `Axis capped at 140%. NRR in ${over.map(short).join(", ")} ran higher (${over.map((m) => DATA.per_month[m].kpi.nrr).join(", ")}) because the 12-month base was still small.` : "";
+  $("churn-trend").innerHTML = lineChart([{name: "Logo churn", values: series("logo_churn"), color: "var(--neg)"}, {name: "Gross MRR churn", values: series("gross_mrr_churn"), color: "var(--amber)"}], {fmt: (v) => `${Math.round(v)}%`, lo: 0});
+}
+
+const K = 3;
+function cohortAt(c, k) { const v = (measure === "logo" ? c.logo : c.revenue)[k]; return v == null ? null : v; }
+function defaultCohort() {
+  const cs = DATA.cohorts.cohorts.filter((c) => c.months.length > K);
+  return (cs.find((c) => c.months[K] === current) || cs.filter((c) => c.months[K] <= current).at(-1) || cs[0]).cohort;
+}
+function renderCohorts() {
+  const cs = DATA.cohorts.cohorts.filter((c) => c.months.length > K);
+  const pick = cohortPick || defaultCohort();
+  const W = 640, H = 230, L = 40, R = 6, T = 14, B = 30, vals = cs.map((c) => cohortAt(c, K));
+  const hi = Math.max(100, Math.ceil(Math.max(...vals) / 20) * 20), lo = 0;
+  const y = (v) => T + (H - T - B) * (1 - (v - lo) / (hi - lo)), bw = (W - L - R) / cs.length;
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Month-3 retention by cohort">`;
+  for (let v = 0; v <= hi; v += 20) s += `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${L - 8}" y="${y(v) + 4}" text-anchor="end">${v}%</text>`;
+  cs.forEach((c, i) => {
+    const v = vals[i], x = L + i * bw + bw * 0.14, w = bw * 0.72, sel = c.cohort === pick;
+    s += `<g class="bar-hit" data-c="${c.cohort}" tabindex="0" role="button" aria-label="Cohort ${full(c.cohort)}, month 3: ${v.toFixed(1)}%"><rect x="${L + i * bw}" y="${T}" width="${bw}" height="${H - T - B}" fill="transparent"/>` +
+      `<rect x="${x}" y="${y(v)}" width="${w}" height="${y(0) - y(v)}" rx="3" fill="${sel ? "var(--accent)" : "var(--line-strong)"}"><title>${full(c.cohort)} cohort, ${c.size} customers: ${v.toFixed(1)}% at month 3</title></rect></g>`;
+    if (+c.cohort.slice(5) % 6 === 1) s += `<text x="${x + w / 2}" y="${H - 10}" text-anchor="middle">${short(c.cohort)}</text>`;
+  });
+  $("cohort-bars").innerHTML = s + "</svg>";
+  document.querySelectorAll("#cohort-bars .bar-hit").forEach((g) => {
+    const go = () => { cohortPick = g.dataset.c; renderCohorts(); };
+    g.addEventListener("click", go); g.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
+  });
+  const c = DATA.cohorts.cohorts.find((x) => x.cohort === pick), avg = DATA.cohorts.average[measure];
+  const n = Math.min(13, Math.max(c.logo.length, 4));
+  const mine = Array.from({length: n}, (_, k) => cohortAt(c, k) ?? null), base = avg.slice(0, n);
+  const Wc = 360, Hc = 230, Lc = 40, Rc = 8, Tc = 14, Bc = 30;
+  const shown = [...mine, ...base].filter((v) => v != null);
+  const lo2 = Math.max(0, Math.floor((Math.min(...shown) - 4) / 10) * 10), hi2 = Math.max(100, Math.ceil(Math.max(...shown) / 10) * 10);
+  const stepC = hi2 - lo2 > 60 ? 20 : 10;
+  const xc = (k) => Lc + (k / (n - 1)) * (Wc - Lc - Rc), yc = (v) => Tc + (Hc - Tc - Bc) * (1 - (v - lo2) / (hi2 - lo2));
+  let t = `<svg viewBox="0 0 ${Wc} ${Hc}" role="img" aria-label="Retention curve for the ${full(pick)} cohort">`;
+  for (let v = lo2; v <= hi2; v += stepC) t += `<line x1="${Lc}" x2="${Wc - Rc}" y1="${yc(v)}" y2="${yc(v)}" stroke="var(--line)"/><text x="${Lc - 8}" y="${yc(v) + 4}" text-anchor="end">${v}%</text>`;
+  for (let k = 0; k < n; k += 3) t += `<text x="${xc(k)}" y="${Hc - 10}" text-anchor="middle">M${k}</text>`;
+  const path = (vs) => vs.map((v, k) => v == null ? "" : `${k && vs[k - 1] != null ? "L" : "M"}${xc(k).toFixed(1)},${yc(v).toFixed(1)}`).join("");
+  t += `<path d="${path(base)}" fill="none" stroke="var(--series2)" stroke-width="2" stroke-dasharray="4 3"/>`;
+  t += `<path d="${path(mine)}" fill="none" stroke="var(--accent)" stroke-width="2.2"/>`;
+  mine.forEach((v, k) => { if (v != null) t += `<circle cx="${xc(k)}" cy="${yc(v)}" r="2.6" fill="var(--accent)"><title>M${k}: ${v.toFixed(1)}%</title></circle>`; });
+  $("cohort-curve").innerHTML = t + "</svg>";
+  $("curve-name").textContent = `${full(pick)} cohort (${c.size} customers)`;
+}
+
+/* ---- trust ---- */
+function renderTrust() {
+  const V2 = DATA.scorecard.v2, V1 = DATA.scorecard.v1, s = V2.summary, o = V1.summary;
+  const hall = (x) => x.hallucinations_ungrounded_numbers + x.hallucinations_unsupported_causes;
+  const stats = [[`${s.grounded}/${s.numbers}`, "numbers match the fact they cite", `v1 ${o.grounded}/${o.numbers}`],
+    [`${hall(s)}`, "hallucinations across 18 updates", `v1 ${hall(o)}`],
+    [s.primary_signals_caught, "primary planted signals caught", `v1 ${o.primary_signals_caught}`],
+    [`${s.word_numbers}`, "word-number slips (target 0)", `v1 ${o.word_numbers}`]];
+  $("stats").innerHTML = stats.map(([v, k, was]) => `<div class="stat"><div class="v">${esc(v)}</div><div class="k">${esc(k)}</div><div class="was">${esc(was)}</div></div>`).join("");
+  $("events").innerHTML = V2.events.map((e, i) => {
+    const e1 = V1.events[i], isControl = e.id === "E8";
+    const ok = isControl ? e.signals.every((x) => x.caught) : e.caught === e.of;
+    const label = isControl ? (ok ? "no false alarm" : "false alarm") : `${e.caught}/${e.of} caught`;
+    const was = isControl ? (e1.signals.every((x) => x.caught) ? "v1 no false alarm" : "v1 false alarm") : `v1 ${e1.caught}/${e1.of}`;
+    return `<details class="event"><summary><span class="id">${e.id}</span><span class="name">${esc(e.name)}<span class="when">${e.months.map(short).join(", ")}</span></span><span class="verdict"><span class="was">${was}</span><span class="tag ${ok ? "good" : "bad"}">${label}</span></span></summary>` +
+      `<ul>${e.signals.map((x, j) => `<li><span class="tag ${x.caught ? "good" : "bad"}">${x.caught ? "caught" : "missed"}</span><span>${esc(x.signal)} <span class="mono" style="color:var(--faint)">${short(x.month)}${x.role === "supporting" ? " · supporting" : ""}${e1.signals[j].caught === x.caught ? "" : ` · v1 ${e1.signals[j].caught ? "caught" : "missed"}`}</span></span></li>`).join("")}</ul></details>`;
+  }).join("");
+  $("comments").innerHTML = V2.comments.map((c) => `<li>${esc(c)}</li>`).join("");
+  $("freeze").textContent = `Prompt v2 ${V2.freeze.prompt_sha256.slice(0, 10)}… · ${V2.freeze.model} · CLI ${V2.freeze.cli_version}`;
+}
+
+function renderLinks() {
+  const L = DATA.links, parts = [];
+  if (L.repo) parts.push(`<a href="${esc(L.repo)}">GitHub</a>`);
+  if (L.writeup) parts.push(`<a href="${esc(L.writeup)}">Write-up</a>`);
+  if (L.video) parts.push(`<a href="${esc(L.video)}">Video</a>`);
+  $("links").innerHTML = parts.join("");
+}
+
+function render() {
+  const d = DATA.per_month[current];
+  $("month").value = current;
+  $("prev").disabled = idx() === 0; $("next").disabled = idx() === months.length - 1;
+  renderHero(d); renderNote(); renderWaterfall(d); renderMovements(d); renderCash(d); renderTrends(); renderCohorts();
+}
+
+(function init() {
+  $("month").innerHTML = months.map((m) => `<option value="${m}">${full(m)}</option>`).join("");
+  $("month").addEventListener("change", (e) => { current = e.target.value; cohortPick = null; render(); });
+  $("prev").addEventListener("click", () => { if (idx() > 0) { current = months[idx() - 1]; cohortPick = null; render(); } });
+  $("next").addEventListener("click", () => { if (idx() < months.length - 1) { current = months[idx() + 1]; cohortPick = null; render(); } });
+  const seg = (m) => () => { measure = m; $("m-logo").setAttribute("aria-pressed", m === "logo"); $("m-rev").setAttribute("aria-pressed", m === "revenue"); renderCohorts(); };
+  $("m-logo").addEventListener("click", seg("logo")); $("m-rev").addEventListener("click", seg("revenue"));
+  document.addEventListener("click", () => document.querySelectorAll(".fig.open").forEach((x) => x.classList.remove("open")));
+  // Section links scroll in-page by script, so they work wherever the page is hosted or previewed.
+  document.querySelectorAll('a[href^="#"]').forEach((a) => a.addEventListener("click", (e) => {
+    const target = document.getElementById(a.getAttribute("href").slice(1));
+    if (!target) return;
+    e.preventDefault();
+    const top = target.getBoundingClientRect().top + window.scrollY - (document.querySelector(".topbar").offsetHeight + 12);
+    window.scrollTo({top, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"});
+    if (target.tagName === "DETAILS") target.open = true;
+  }));
+  renderLinks(); renderTrust(); render();
+})();
+</script>
+</body>
+</html>

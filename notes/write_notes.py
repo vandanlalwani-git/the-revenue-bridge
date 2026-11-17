@@ -26,6 +26,8 @@ from pathlib import Path
 
 import yaml
 
+from notes.sets import SETS, paths
+
 ROOT = Path(__file__).resolve().parents[1]
 NOTES = ROOT / "notes"
 
@@ -59,10 +61,10 @@ def cli_version(cfg) -> str:
     return version
 
 
-def check_freeze(cfg, prompt_hash: str, version: str) -> None:
-    path = NOTES / "FREEZE.json"
+def check_freeze(cfg, prompt_hash: str, version: str, path: Path = None) -> None:
+    path = path or NOTES / "FREEZE.json"
     if not path.exists():
-        sys.exit("notes/FREEZE.json is missing: freeze the prompt first (python -m notes.freeze).")
+        sys.exit(f"{path} is missing: freeze the prompt first (python -m notes.freeze).")
     freeze = json.loads(path.read_text())
     mismatches = [k for k, v in (("prompt_sha256", prompt_hash), ("model", cfg["model"]), ("cli_version", version))
                   if freeze.get(k) != v]
@@ -89,21 +91,24 @@ def write_note(cfg, prompt: str, facts_path: Path) -> dict:
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument("--set", default="v1", choices=sorted(SETS), help="note set (see notes/sets.py)")
     ap.add_argument("--dev", action="store_true", help="dev-seed notes for the pre-freeze lint")
-    ap.add_argument("--facts", type=Path, default=NOTES / "facts")
-    ap.add_argument("--out", type=Path, default=NOTES / "output")
+    ap.add_argument("--facts", type=Path)
+    ap.add_argument("--out", type=Path)
     ap.add_argument("--months", nargs="*")
     args = ap.parse_args(argv)
 
+    P = paths(args.set)
+    args.facts, args.out = args.facts or P["facts"], args.out or P["output"]
     cfg = load_config()
-    prompt_path = NOTES / "prompt.md"
+    prompt_path = P["prompt"]
     prompt_hash = sha256(prompt_path)
     version = cli_version(cfg)
     if args.dev:
-        if args.out.resolve() == (NOTES / "output").resolve():
-            sys.exit("--dev notes must not go to notes/output.")
+        if args.out.resolve() == P["output"].resolve():
+            sys.exit("--dev notes must not go to the set's output folder.")
     else:
-        check_freeze(cfg, prompt_hash, version)
+        check_freeze(cfg, prompt_hash, version, P["freeze"])
 
     months = args.months or sorted(p.stem for p in args.facts.glob("*.json"))
     args.out.mkdir(parents=True, exist_ok=True)
@@ -114,6 +119,7 @@ def main(argv=None):
         meta = {"month": month, "prompt_sha256": prompt_hash, "facts_sha256": sha256(facts_path),
                 "cli_version": version, "model_requested": cfg["model"], "models_reported": note["models_reported"],
                 "num_turns": note["num_turns"], "seconds": note["seconds"], "dev_seed": args.dev,
+                **({"set": args.set} if args.set != "v1" else {}),
                 "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds")}
         (args.out / f"{month}.meta.json").write_text(json.dumps(meta, indent=1) + "\n")
         print(f"{month}: {len(note['text'].split())} words, {note['seconds']}s, {note['models_reported']}")

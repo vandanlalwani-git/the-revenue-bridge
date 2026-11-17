@@ -1,0 +1,569 @@
+{
+ "summary": {
+  "notes": 18,
+  "numbers": 427,
+  "grounded": 427,
+  "miscited": 0,
+  "uncited": 0,
+  "hallucinations_ungrounded_numbers": 0,
+  "hallucinations_unsupported_causes": 0,
+  "causal_claims_awaiting_review": 0,
+  "word_numbers": 0,
+  "format_problems": 0,
+  "unsupported_anomaly_claims": 0,
+  "primary_signals_caught": "19/20",
+  "supporting_signals_caught": "1/3",
+  "metrics_layer_events_passing": "8/8",
+  "manual_review": "Claude, first read on 2026-11-17; awaiting Vandan's confirmation"
+ },
+ "signals": [
+  {
+   "event": "E1",
+   "month": "2025-09",
+   "role": "primary",
+   "signal": "expansion with driver price_change, concentrated in Starter, and a jump in customers expanding; total expansion dollars are not elevated",
+   "metrics_layer": true,
+   "narrative_caught": true,
+   "rule": "fact-ID and keyword rule"
+  },
+  {
+   "event": "E1",
+   "month": "2025-09",
+   "role": "primary",
+   "signal": "Starter voluntary churn above trailing 3-month average",
+   "metrics_layer": true,
+   "narrative_caught": true,
+   "rule": "fact-ID and keyword rule"
+  },
+  {
+   "event": "E1",
+   "month": "2025-10",
+   "role": "primary",
+   "signal": "Starter voluntary churn above trailing 3-month average",
+   "metrics_layer": true,
+   "narrative_caught": true,
+   "rule": "fact-ID and keyword rule"
+  },
+  {
+   "event": "E2",
+   "month": "2025-11",
+   "role": "primary",
+   "signal": "one logo is more than 50% of churned MRR",
+   "metrics_layer": true,
+   "narrative_caught": true,
+   "rule": "fact-ID and keyword rule"
+  },
+  {
+   "event": "E2",
+   "month": "2025-11",
+   "role": "primary",
+   "signal": "gross MRR churn % far above logo churn %",
+   "metrics_layer": true,
+   "narrative_caught": false,
+   "rule": "fact-ID and keyword rule"
+  },
+  {
+   "event": "E3",
+   "month": "2026-04",
+   "role": "primary",
+   "signal": "expansion, driver discount_ended, from the 2026-01 cohort",
+   "metrics_layer": true,
+   "narrative_caught": true,
+   "rule": "fact-ID and keyword rule"
+  },
+  {
+   "event": "E3",
+   "month": "2026-04",
+   "role": "primary",
+   "signal": "voluntary churn concentrated in the 2026-01 cohort",
+   "metrics_layer": true,
+   "narrative_caught": true,
+   "rule": "fact-ID and keyword rule"
+  },
+  {
+   "event": "E3",
+   "month": "2026-04",
+   "role": "primary",
+   "signal": "logo retention cliff at M3 for the 2026-01 cohort",
+   "metrics_layer": true,
+   "narrative_caught": true,
+   "rule": "fact-ID and keyword rule"
+  },
+  {
+   "event": "E4",
+   "month": "2026-02",
+   "role": "primary",
+   "signal": "customers entering dunning spike",
+   "metrics_layer": true,
+   "narrative_caught": true,
+   "rule": "fact-ID and keyword rule"
+  },
+  {
+   "event": "E4",
+   "month": "2026-02",
+   "role": "primary",
+   "signal": "involuntary churn count up (renewal days 1-14)",
+   "metrics_layer": true,
+   "narrative_caught": true,
+   "rule": "fact-ID and keyword rule"
+  },
+  {
+   "event": "E4",
+   "month": "2026-02",
+   "role": "primary",
+   "signal": "customers in dunning at month-end elevated (renewal days 15-28)",
+   "metrics_layer": true,
+   "narrative_caught": true,
+   "rule": "fact-ID and keyword rule"
+  },
+  {
+   "event": "E4",
+   "month": "2026-03",
+   "role": "primary",
+   "signal": "involuntary churn count up again (spill-over)",
+   "metrics_layer": true,
+   "narrative_caught": true,
+   "rule": "fact-ID and keyword rule"
+  },
+  {
+   "event": "E4",
+   "month": "2026-02",
+   "role": "supporting",
+   "signal": "at-risk MRR at month-end elevated",
+   "metrics_layer": true,
+   "narrative_caught": true,
+   "rule": "fact-ID and keyword rule"
+  },
+  {
+   "event": "E4",
+   "month": "2026-02",
+   "role": "supporting",
+   "signal": "bad-debt expense up",
+   "metrics_layer": true,
+   "narrative_caught": false,
+   "rule": "fact-ID and keyword rule"
+  },
+  {
+   "event": "E4",
+   "month": "2026-03",
+   "role": "supporting",
+   "signal": "at-risk MRR at month-end back to baseline",
+   "metrics_layer": true,
+   "narrative_caught": false,
+   "rule": "fact-ID and keyword rule"
+  },
+  {
+   "event": "E5",
+   "month": "2026-03",
+   "role": "primary",
+   "signal": "billings and cash far above revenue",
+   "metrics_layer": true,
+   "narrative_caught": true,
+   "rule": "fact-ID and keyword rule"
+  },
+  {
+   "event": "E5",
+   "month": "2026-03",
+   "role": "primary",
+   "signal": "deferred revenue jumps",
+   "metrics_layer": true,
+   "narrative_caught": true,
+   "rule": "fact-ID and keyword rule"
+  },
+  {
+   "event": "E5",
+   "month": "2026-03",
+   "role": "primary",
+   "signal": "contraction, driver interval_switch",
+   "metrics_layer": true,
+   "narrative_caught": true,
+   "rule": "fact-ID and keyword rule"
+  },
+  {
+   "event": "E5",
+   "month": "2026-03",
+   "role": "primary",
+   "signal": "logo churn unaffected",
+   "metrics_layer": true,
+   "narrative_caught": true,
+   "rule": "fact-ID and keyword rule"
+  },
+  {
+   "event": "E6",
+   "month": "2026-04",
+   "role": "primary",
+   "signal": "delivered-portion refunds reduce net revenue and net cash; measured against the month's gross figures, not as an absolute fall",
+   "metrics_layer": true,
+   "narrative_caught": true,
+   "rule": "fact-ID and keyword rule"
+  },
+  {
+   "event": "E6",
+   "month": "2026-04",
+   "role": "primary",
+   "signal": "MRR unaffected",
+   "metrics_layer": true,
+   "narrative_caught": true,
+   "rule": "fact-ID and keyword rule"
+  },
+  {
+   "event": "E7",
+   "month": "2026-05",
+   "role": "primary",
+   "signal": "reactivation MRR well above trailing 3-month average",
+   "metrics_layer": true,
+   "narrative_caught": true,
+   "rule": "fact-ID and keyword rule"
+  },
+  {
+   "event": "E8",
+   "month": "2026-06",
+   "role": "primary",
+   "signal": "none; no unsupported anomaly claims",
+   "metrics_layer": true,
+   "narrative_caught": true,
+   "rule": "no unsupported anomaly language"
+  }
+ ],
+ "months": {
+  "2025-01": {
+   "words": 223,
+   "format_problems": [],
+   "numbers": 28,
+   "grounded": 28,
+   "miscited": [],
+   "uncited": [],
+   "ungrounded": [],
+   "word_numbers": [],
+   "anomaly_claims": [],
+   "causal_claims_for_review": [],
+   "unsupported_causes_from_review": []
+  },
+  "2025-02": {
+   "words": 211,
+   "format_problems": [],
+   "numbers": 24,
+   "grounded": 24,
+   "miscited": [],
+   "uncited": [],
+   "ungrounded": [],
+   "word_numbers": [],
+   "anomaly_claims": [],
+   "causal_claims_for_review": [],
+   "unsupported_causes_from_review": []
+  },
+  "2025-03": {
+   "words": 178,
+   "format_problems": [],
+   "numbers": 24,
+   "grounded": 24,
+   "miscited": [],
+   "uncited": [],
+   "ungrounded": [],
+   "word_numbers": [],
+   "anomaly_claims": [],
+   "causal_claims_for_review": [],
+   "unsupported_causes_from_review": []
+  },
+  "2025-04": {
+   "words": 203,
+   "format_problems": [],
+   "numbers": 21,
+   "grounded": 21,
+   "miscited": [],
+   "uncited": [],
+   "ungrounded": [],
+   "word_numbers": [],
+   "anomaly_claims": [
+    {
+     "sentence": "Headline: New MRR reached $5,612 [F2], 2.5 times [F142] its trailing average, lifting closing MRR to $36,330 [F8].\n- Refund spike: Refunds paid were $591 [F40], 34.6× [F200] their trailing average, from 1 [F49] refund to Blue Beacon Systems [F53], with $0 [F54] for delivered service.",
+     "words": [
+      "spike"
+     ],
+     "supported": true
+    }
+   ],
+   "causal_claims_for_review": [
+    "What it means: Revenue was unaffected because the refund reduced deferred revenue, though it still reduced cash.\n- New customer growth: 36 [F12] customers joined, 1.5× [F164] the trailing average, led by Golden Signal Systems [F115] on Scale [F117] at $1,029 [F118]."
+   ],
+   "unsupported_causes_from_review": []
+  },
+  "2025-05": {
+   "words": 209,
+   "format_problems": [],
+   "numbers": 21,
+   "grounded": 21,
+   "miscited": [],
+   "uncited": [],
+   "ungrounded": [],
+   "word_numbers": [],
+   "anomaly_claims": [
+    {
+     "sentence": "Headline: MRR closed at $38,475 [F8], 1.2 times [F143] its trailing average, though New MRR ran at 0.6 times [F147] its usual level.\n- Refund spike: Refunds paid were $753 [F44], 3.6 times [F201] their trailing average, from 1 [F53] refund to Lucid Anchor Logistics for service not yet delivered.",
+     "words": [
+      "spike"
+     ],
+     "supported": true
+    }
+   ],
+   "causal_claims_for_review": [
+    "What it means: existing customers added less than usual, and contraction reflects billing-interval changes rather than downgrades.\n- New business: New MRR was $2,054 [F2], 0.6 times [F147] its trailing average, from 26 [F12] new customers, led by Golden Orbit Labs on Scale at $669 [F122]."
+   ],
+   "unsupported_causes_from_review": []
+  },
+  "2025-06": {
+   "words": 230,
+   "format_problems": [],
+   "numbers": 25,
+   "grounded": 25,
+   "miscited": [],
+   "uncited": [],
+   "ungrounded": [],
+   "word_numbers": [],
+   "anomaly_claims": [],
+   "causal_claims_for_review": [],
+   "unsupported_causes_from_review": []
+  },
+  "2025-07": {
+   "words": 208,
+   "format_problems": [],
+   "numbers": 25,
+   "grounded": 25,
+   "miscited": [],
+   "uncited": [],
+   "ungrounded": [],
+   "word_numbers": [],
+   "anomaly_claims": [],
+   "causal_claims_for_review": [],
+   "unsupported_causes_from_review": []
+  },
+  "2025-08": {
+   "words": 217,
+   "format_problems": [],
+   "numbers": 26,
+   "grounded": 26,
+   "miscited": [],
+   "uncited": [],
+   "ungrounded": [],
+   "word_numbers": [],
+   "anomaly_claims": [],
+   "causal_claims_for_review": [],
+   "unsupported_causes_from_review": []
+  },
+  "2025-09": {
+   "words": 203,
+   "format_problems": [],
+   "numbers": 23,
+   "grounded": 23,
+   "miscited": [],
+   "uncited": [],
+   "ungrounded": [],
+   "word_numbers": [],
+   "anomaly_claims": [
+    {
+     "sentence": "Headline: Closing MRR reached $53,083 [F8], but voluntary churn MRR ran 3.5× [F161] its trailing average.\n- Failed payments: At-risk MRR from 4 [F39] customers in dunning was $928 [F40], an unusual 96.0× [F225] its trailing average.",
+     "words": [
+      "unusual"
+     ],
+     "supported": true
+    }
+   ],
+   "causal_claims_for_review": [],
+   "unsupported_causes_from_review": []
+  },
+  "2025-10": {
+   "words": 230,
+   "format_problems": [],
+   "numbers": 27,
+   "grounded": 27,
+   "miscited": [],
+   "uncited": [],
+   "ungrounded": [],
+   "word_numbers": [],
+   "anomaly_claims": [],
+   "causal_claims_for_review": [],
+   "unsupported_causes_from_review": []
+  },
+  "2025-11": {
+   "words": 202,
+   "format_problems": [],
+   "numbers": 24,
+   "grounded": 24,
+   "miscited": [],
+   "uncited": [],
+   "ungrounded": [],
+   "word_numbers": [],
+   "anomaly_claims": [],
+   "causal_claims_for_review": [],
+   "unsupported_causes_from_review": []
+  },
+  "2025-12": {
+   "words": 205,
+   "format_problems": [],
+   "numbers": 24,
+   "grounded": 24,
+   "miscited": [],
+   "uncited": [],
+   "ungrounded": [],
+   "word_numbers": [],
+   "anomaly_claims": [],
+   "causal_claims_for_review": [],
+   "unsupported_causes_from_review": []
+  },
+  "2026-01": {
+   "words": 191,
+   "format_problems": [],
+   "numbers": 20,
+   "grounded": 20,
+   "miscited": [],
+   "uncited": [],
+   "ungrounded": [],
+   "word_numbers": [],
+   "anomaly_claims": [],
+   "causal_claims_for_review": [
+    "What it means: Because the service was delivered, it reduced revenue, not deferred revenue.\n- New customers: 64 [F12] customers joined, adding New MRR of $4,706 [F2], and closing MRR reached $66,398 [F8], 1.1× [F144] its trailing average."
+   ],
+   "unsupported_causes_from_review": []
+  },
+  "2026-02": {
+   "words": 187,
+   "format_problems": [],
+   "numbers": 21,
+   "grounded": 21,
+   "miscited": [],
+   "uncited": [],
+   "ungrounded": [],
+   "word_numbers": [],
+   "anomaly_claims": [],
+   "causal_claims_for_review": [],
+   "unsupported_causes_from_review": []
+  },
+  "2026-03": {
+   "words": 238,
+   "format_problems": [],
+   "numbers": 25,
+   "grounded": 25,
+   "miscited": [],
+   "uncited": [],
+   "ungrounded": [],
+   "word_numbers": [],
+   "anomaly_claims": [],
+   "causal_claims_for_review": [
+    "Headline: Billings were 2.4 times [F204] and net cash collected 2.5 times [F208] their trailing averages, while contraction MRR ran at 63.6× [F160] its usual level because of interval switches.\n- Interval switch contraction: Contraction MRR was $2,006 [F5], 63.6× [F160] its trailing average, with $2,006 [F19] across 52 [F20] customers coming from interval switches."
+   ],
+   "unsupported_causes_from_review": []
+  },
+  "2026-04": {
+   "words": 204,
+   "format_problems": [],
+   "numbers": 24,
+   "grounded": 24,
+   "miscited": [],
+   "uncited": [],
+   "ungrounded": [],
+   "word_numbers": [],
+   "anomaly_claims": [],
+   "causal_claims_for_review": [],
+   "unsupported_causes_from_review": []
+  },
+  "2026-05": {
+   "words": 207,
+   "format_problems": [],
+   "numbers": 21,
+   "grounded": 21,
+   "miscited": [],
+   "uncited": [],
+   "ungrounded": [],
+   "word_numbers": [],
+   "anomaly_claims": [],
+   "causal_claims_for_review": [],
+   "unsupported_causes_from_review": []
+  },
+  "2026-06": {
+   "words": 214,
+   "format_problems": [],
+   "numbers": 24,
+   "grounded": 24,
+   "miscited": [],
+   "uncited": [],
+   "ungrounded": [],
+   "word_numbers": [],
+   "anomaly_claims": [],
+   "causal_claims_for_review": [],
+   "unsupported_causes_from_review": []
+  }
+ },
+ "metrics_layer": {
+  "E1": {
+   "passed": true,
+   "tests": {
+    "test_e1_price_rise": true,
+    "test_e1_price_change_expansion_in_september_only": true,
+    "test_e1_starter_voluntary_churn": true
+   }
+  },
+  "E2": {
+   "passed": true,
+   "tests": {
+    "test_e2_one_logo_dominates_churn": true,
+    "test_e2_one_logo_is_most_of_november_churn": true,
+    "test_e2_gross_mrr_churn_far_above_logo_churn": true
+   }
+  },
+  "E3": {
+   "passed": true,
+   "tests": {
+    "test_e3_promo_cohort_cliff_and_discount_roll_off": true,
+    "test_e3_cliff_at_m3_and_revenue_retention_above_logo": true,
+    "test_e3_discount_roll_off_is_april_expansion_from_january_cohort": true
+   }
+  },
+  "E4": {
+   "passed": true,
+   "tests": {
+    "test_e4_card_expiry": true,
+    "test_e4_counts_at_the_metrics_layer": true,
+    "test_e4_bad_debt_expense_rises": true
+   }
+  },
+  "E5": {
+   "passed": true,
+   "tests": {
+    "test_e5_annual_push_billings": true,
+    "test_e5_interval_switch_contraction_in_march": true,
+    "test_e5_cash_far_above_revenue_deferred_up_mrr_down": true
+   }
+  },
+  "E6": {
+   "passed": true,
+   "tests": {
+    "test_e6_large_refund_customer_stays": true,
+    "test_e6_service_credit_is_all_delivered": true
+   }
+  },
+  "E7": {
+   "passed": true,
+   "tests": {
+    "test_e7_winback_reactivation_wave": true,
+    "test_e7_reactivation_wave_in_may": true
+   }
+  },
+  "E8": {
+   "passed": true,
+   "tests": {
+    "test_e8_control_month_is_quiet": true
+   }
+  }
+ },
+ "review_comments": [
+  "Unsupported causes (hallucination type b): none found. The 4 sentences the evaluator flagged as causal are all shown by cited facts: refund splits in 2025-04 and 2026-01, and the interval-switch driver in 2025-05 and 2026-03.",
+  "Every customer named appears in that month's facts, with the plan and movement the facts give.",
+  "E6, 2026-04: v2 states that the refunds were for service already delivered and came off net revenue, which is correct. This is stronger than v1, which only reported the refund.",
+  "E2, 2025-11, 'gross MRR churn far above logo churn': missed by the rule again. The update names the departing Scale customers and says losing larger accounts removes significant revenue even when few customers leave, but it cites neither the gross MRR churn rate nor logo churn. The automated result stands.",
+  "E4 supporting signals missed as in v1: the February update does not mention bad-debt expense, and the March update does not say at-risk MRR returned to baseline. It does say no customers remained in dunning.",
+  "Wording, not a hallucination: 2025-06 calls a monthly-to-annual interval switch a 'downgrade'. It is a contraction in MRR, not a downgrade of plan.",
+  "Slight overstatement: 2025-03 says 'nothing was lost between billing and cash'. That rests on $0 refunds and $0 bad-debt expense only.",
+  "2025-10 cites 2 facts after a single figure ('1.2 times [F197] [F205]'). Both facts carry that value, so it is grounded, but it breaks the one-ID-per-number rule.",
+  "E8, 2026-06, control month: the update flags at-risk MRR at 5.9× its trailing average. That is an accurate mention of an unplanted movement, supported by a cited fact, so it is not penalised."
+ ]
+}
