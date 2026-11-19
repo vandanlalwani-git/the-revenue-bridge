@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>The Revenue Bridge</title>
 <meta name="description" content="A SaaS finance pack on Stripe-shaped test data: MRR tied to IFRS 15 revenue and to cash, with AI founder notes tested against a hidden answer key.">
-<script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#f6f7f9">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
@@ -19,20 +20,7 @@
   --sans: "Geist", "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
   --mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   --radius: 16px;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0a0d12; --surface: #11151c; --raised: #151a22; --ink: #e9edf2; --muted: #9aa4b2; --faint: #6d7684;
-    --line: #1f2530; --line-strong: #2b3340;
-    --accent: #34c9ac; --accent-ink: #5fdcc3; --accent-soft: #10302a;
-    --neg: #f1735f; --neg-soft: #36191474; --amber: #e3ab52; --total: #c7d0dc; --series2: #7f8a9c; color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --bg: #0a0d12; --surface: #11151c; --raised: #151a22; --ink: #e9edf2; --muted: #9aa4b2; --faint: #6d7684;
-  --line: #1f2530; --line-strong: #2b3340;
-  --accent: #34c9ac; --accent-ink: #5fdcc3; --accent-soft: #10302a;
-  --neg: #f1735f; --neg-soft: #36191474; --amber: #e3ab52; --total: #c7d0dc; --series2: #7f8a9c; color-scheme: dark;
+  color-scheme: light;
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 76px; }
@@ -66,25 +54,7 @@ p { margin: 0; }
 @media (max-width: 860px) { .topnav { display: none; } .topend { margin-left: auto; } }
 .toplinks { display: flex; gap: 14px; font-size: 13.5px; }
 .toplinks:empty { display: none; }
-.theme-btn { width: 34px; height: 34px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--muted); cursor: pointer; display: grid; place-items: center; flex: none; }
-.theme-btn:hover { color: var(--ink); }
-.theme-btn .moon { display: none; }
-:root[data-theme="dark"] .theme-btn .sun { display: none; }
-:root[data-theme="dark"] .theme-btn .moon { display: block; }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .theme-btn .sun { display: none; }
-  :root:not([data-theme="light"]) .theme-btn .moon { display: block; }
-}
-/* Printed, it is a financial statement: always light, no sticky bar. */
-@media print {
-  :root, :root[data-theme="dark"], :root:not([data-theme="light"]) {
-    --bg: #f6f7f9; --surface: #ffffff; --raised: #fbfcfd; --ink: #0d1117; --muted: #5d6674; --faint: #8c95a3;
-    --line: #e5e8ed; --line-strong: #d3d8e0;
-    --accent: #0c9c84; --accent-ink: #087866; --accent-soft: #e3f4f0;
-    --neg: #df5640; --neg-soft: #fbe9e5; --amber: #c98a26; --total: #1e2836; --series2: #8a94a6; color-scheme: light;
-  }
-  .topbar { position: static; } .theme-btn { display: none; }
-}
+@media print { .topbar { position: static; } }
 
 /* hero */
 .hero { padding-block: 44px 8px; }
@@ -262,10 +232,6 @@ footer { padding-block: 56px 72px; color: var(--faint); font-size: 13px; }
     </nav>
     <div class="topend">
     <div class="toplinks" id="links"></div>
-    <button type="button" class="theme-btn" id="theme" aria-label="Switch between light and dark" title="Light / dark">
-      <svg class="sun" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="3.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 1.5v1.6M8 12.9v1.6M1.5 8h1.6M12.9 8h1.6M3.4 3.4l1.1 1.1M11.5 11.5l1.1 1.1M3.4 12.6l1.1-1.1M11.5 4.5l1.1-1.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-      <svg class="moon" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.2 10.1A5.6 5.6 0 0 1 5.9 2.8a5.6 5.6 0 1 0 7.3 7.3Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
-    </button>
     </div>
   </div>
 </header>
@@ -618,17 +584,6 @@ function renderTrust() {
   $("comments").innerHTML = V2.comments.map((c) => `<li>${esc(c)}</li>`).join("");
   $("freeze").textContent = `Prompt v2 ${V2.freeze.prompt_sha256.slice(0, 10)}… · ${V2.freeze.model} · CLI ${V2.freeze.cli_version}`;
 }
-
-// Theme: follows the viewer's system setting until they press the switch; the choice is remembered on this device.
-(function () {
-  const root = document.documentElement;
-  try { const saved = localStorage.getItem("theme"); if (saved === "light" || saved === "dark") root.dataset.theme = saved; } catch (e) {}
-  document.getElementById("theme").addEventListener("click", () => {
-    const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
-    root.dataset.theme = dark ? "light" : "dark";
-    try { localStorage.setItem("theme", root.dataset.theme); } catch (e) {}
-  });
-})();
 
 function renderLinks() {
   const L = DATA.links, parts = [];
