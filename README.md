@@ -66,3 +66,7 @@ STRIPE_KEY_FILE=/path/outside/repo .venv/bin/python stripe_check/run_test_clock.
 ## Authorship
 
 Vandan set the accounting judgements, reviewed every SQL file and signed off each stage. The SQL, the pipeline and the page were written by Claude Code (Anthropic).
+
+## Licence
+
+MIT. See [LICENSE](LICENSE).
