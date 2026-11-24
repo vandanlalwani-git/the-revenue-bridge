@@ -5,7 +5,8 @@ A SaaS finance pack built on Stripe-shaped test data. SQL computes every number:
 **Most Stripe dashboards stop at MRR. This one ties MRR to revenue and to cash, every month, to the cent.**
 
 - **Live page:** https://vandanlalwani-git.github.io/the-revenue-bridge/
-- **Write-up:** [docs/writeup.md](docs/writeup.md)
+- **Write-up (why it was built, and the reasoning):** [docs/writeup.md](docs/writeup.md)
+- **Methodology and disclosures (answer-key changes, prompt freezes, Stripe check):** [docs/methodology.md](docs/methodology.md)
 - **Metric definitions (every judgement call):** [docs/metric_definitions.md](docs/metric_definitions.md)
 
 All data is synthetic, generated from a fixed seed in Stripe's object model. Nothing here comes from a real company. The same SQL was also run, unchanged, on data created by Stripe itself (see below).
@@ -64,4 +65,4 @@ STRIPE_KEY_FILE=/path/outside/repo .venv/bin/python stripe_check/run_test_clock.
 
 ## Authorship
 
-The SQL, the pipeline and the page were written by Claude (Anthropic) and reviewed by Vandan, who set the accounting judgements and signed off each stage.
+Vandan set the accounting judgements, reviewed every SQL file and signed off each stage. The SQL, the pipeline and the page were written by Claude Code (Anthropic).

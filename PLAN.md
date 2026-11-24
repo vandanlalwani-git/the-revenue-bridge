@@ -140,7 +140,7 @@ Revenue recognition, changed from v1:
    - **Detection, metrics layer:** each expected signal, checked by threshold in SQL.
    - **Detection, narrative layer:** does the note for that month mention the signal? This is checked with keyword and fact-ID rules, and a manual review is recorded.
    - **Quiet months, including E8 and all unplanted months:** anomaly language ("spike", "surge", "sharp", "concentrated", "unusual"…) has to cite a fact whose trailing-average delta crosses the threshold. Otherwise it counts as an unsupported claim.
-6. **Write-up disclosures (required, drafted in `docs/writeup.md`):** the answer key was finalised after data generation and before any note was written, with each adjustment listed; the prompt was frozen before evaluation. Also: the facts file **pre-computes the top movers, the trailing-average deltas and the ratios to the trailing average**. The AI's job is to select, rank and narrate figures already computed. It doesn't discover anomalies from raw data.
+6. **Write-up disclosures (required, in `docs/methodology.md`; the write-up summarises them):** the answer key was finalised after data generation and before any note was written, with each adjustment listed; the prompt was frozen before evaluation. Also: the facts file **pre-computes the top movers, the trailing-average deltas and the ratios to the trailing average**. The AI's job is to select, rank and narrate figures already computed. It doesn't discover anomalies from raw data.
 
 ---
 
@@ -171,7 +171,7 @@ the-revenue-bridge/
 ├─ site/   build_site.py, template.html, index.html
 ├─ .github/workflows/pages.yml   # deploys site/ only
 ├─ tests/
-└─ docs/   metric_definitions.md, writeup.md
+└─ docs/   metric_definitions.md, writeup.md (the reasoning), methodology.md (full disclosures)
 ```
 
 **SQL ownership:** Claude drafts each SQL file and writes its header in plain words: what the file computes, the judgement call it makes and one edge case it handles. Vandan reviews the logic through a plain-English walkthrough of every file (changed from "Vandan annotates" on 2026-11-12, at Vandan's request). The write-up must say the SQL and headers were written by Claude and reviewed by Vandan, so it doesn't overclaim authorship.
